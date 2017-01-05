@@ -1,15 +1,7 @@
 import fancyElementFactory from './fancyElement'
-import { StyleSheet } from 'aphrodite/no-important'
+import { StyleSheet } from './stylesheet'
 import { pickBy } from 'lodash'
 import { applyNiceStyles, flattenThemes, isFunc } from './helpers'
-
-console.log('using gloss')
-const { StyleSheet: GlossStyleSheet } = StyleSheet.extend([{
-  selectorHandler: (selector, _, generateSubtreeStyles) => {
-    console.log('check it out', selector)
-    return null
-  }
-}])
 
 // defaults
 const defaultOpts = {}
@@ -57,7 +49,7 @@ function getDynamicStyles(activeKeys: Array, props: Object, styles: Object, prop
 }
 
 function getDynamicSheets(dynamics) {
-  const sheet = GlossStyleSheet.create(applyNiceStyles(dynamics, `${name}`))
+  const sheet = StyleSheet.create(applyNiceStyles(dynamics, `${name}`))
   return Object.keys(dynamics).map(key => ({ ...sheet[key], isDynamic: true, key }))
 }
 
@@ -67,7 +59,7 @@ function getStyles({ name, style }, theme) {
 
   const staticStyles = pickBy(styles, x => !isFunc(x))
   const niceStatics = applyNiceStyles(staticStyles, `${name}:`)
-  const statics = GlossStyleSheet.create(niceStatics)
+  const statics = StyleSheet.create(niceStatics)
 
 
   return {

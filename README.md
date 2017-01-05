@@ -4,10 +4,10 @@ HOC for making style a first class citizen of components. Inline styles for all.
 
 Combines a few things:
 
-- [Aphrodite](https://github.com/Khan/aphrodite) for stylesheet extraction
+- [JSS](https://github.com/cssinjs/jss) styles
 - [motion-nice-styles](https://github.com/motion/gloss/tree/master/packages/nice-styles) for powerful JS syntax for styles
-- it's own theme engine
-- $style props
+- Advanced theme engine
+- Babel plugin to allow simpler $style props
 
 
 example
