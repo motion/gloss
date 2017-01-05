@@ -109,7 +109,9 @@ function processStyles(styles: Object, includeEmpty: boolean = false, errorMessa
       continue
     }
     // recurse into object (psuedo or media query)
-    if (key.substr(0, 1) === '@') {
+    const firstChar = key.substr(0, 1)
+
+    if (firstChar === '@' || firstChar === '&') {
       toReturn[key] = processStyles(value)
       continue
     }
@@ -117,7 +119,7 @@ function processStyles(styles: Object, includeEmpty: boolean = false, errorMessa
       toReturn[key] = processArray(key, value)
       continue
     }
-    // throw new Error(`${errorMessage}: Invalid style value for ${key}`)
+    throw new Error(`${errorMessage}: Invalid style value for ${key}: ${JSON.stringify(value)}`)
   }
   return toReturn
 }
