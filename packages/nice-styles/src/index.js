@@ -3,7 +3,6 @@
 import { objectToColor } from './helpers'
 import type { Transform } from './types'
 
-const PSEUDO = new Set(['active', 'hover', 'focus', 'link', 'visited', 'checked', 'disabled', 'empty', 'invalid'])
 const COLOR_KEYS = new Set(['background'])
 const TRANSFORM_KEYS_MAP = {
   x: 'translateX',
@@ -112,10 +111,6 @@ function processStyles(styles: Object, includeEmpty: boolean = false, errorMessa
     // recurse into object (psuedo or media query)
     if (key.substr(0, 1) === '@') {
       toReturn[key] = processStyles(value)
-      continue
-    }
-    if (PSEUDO.has(key)) {
-      toReturn[`:${key}`] = processStyles(value)
       continue
     }
     if (Array.isArray(value)) {

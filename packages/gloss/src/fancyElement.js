@@ -1,5 +1,5 @@
 import React from 'react'
-import { css } from 'aphrodite/no-important'
+import { css } from './stylesheet'
 import { omit } from 'lodash'
 import { filterStyleKeys, filterParentStyleKeys } from './helpers'
 
@@ -128,19 +128,6 @@ export default (Child, parentStyles, styles, opts, getDynamicStyles, getDynamicS
 
     // remove style props
     const newProps = omit(props, [...styleKeys, ...parentStyleKeys])
-
-    // helper that passes in props - theme props
-    if (processTheme && opts.passFilteredProps) {
-      const filteredPropsKey = typeof opts.passFilteredProps === 'string' ?
-        opts.passFilteredProps :
-        'filteredProps'
-
-      if (typeof newProps[filteredPropsKey] !== 'undefined') {
-        throw new Error(`[gloss] passFilteredProps conflict, on ${Child.name}: key ${filteredPropsKey} already has value ${newProps[filteredPropsKey]}`)
-      }
-
-      newProps[filteredPropsKey] = omit(newProps, themeKeys)
-    }
 
     // gather styles flat
     const activeStyles = objToFlatArray(finalStyles)
