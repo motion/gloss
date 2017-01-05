@@ -27,7 +27,7 @@ const style = gloss()
     h1: {
       fontSize: 22,
       color: [255, 255, 255],
-      hover: { color: 'red', },
+      '&:hover': { color: 'red', },
       borderBottom: [2, 'solid yellow']
     },
     black: {
@@ -63,11 +63,16 @@ Gloss supports just two options for now:
 import gloss from 'gloss'
 
 const style = gloss({
-  dontTheme: false, // turn on to ignore Child.theme
+  dontTheme: false, // turn on to ignore themes
   baseStyles: null, // object: styles
 })
 
 ```
+
+For more information on how to write styles, see:
+
+- [JSS](https://github.com/cssinjs/jss)
+- [motion-nice-styles](https://github.com/motion/gloss/tree/master/packages/nice-styles)
 
 
 features

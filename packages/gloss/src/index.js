@@ -55,12 +55,12 @@ function getDynamicSheets(dynamics) {
 
 function getStyles({ name, style }, theme) {
   const styles = { ...style, ...flattenThemes(theme) }
+
   const dynamicStyles = pickBy(styles, isFunc)
 
   const staticStyles = pickBy(styles, x => !isFunc(x))
   const niceStatics = applyNiceStyles(staticStyles, `${name}:`)
   const statics = StyleSheet.create(niceStatics)
-
 
   return {
     statics,
