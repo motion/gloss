@@ -95,12 +95,17 @@ export default (Child, parentStyles, styles, opts, getDynamicStyles, getDynamicS
 
       if (themes && themeKeys.length) {
         for (const prop of themeKeys) {
+          const isDynamic = typeof styles.theme[prop] === 'function'
+
           // static theme
-          if (this.props[prop] === true) {
+          if (!isDynamic && this.props[prop] === true) {
             for (const key of allKeys) {
               finalStyles[key].push(styles.statics[`${prop}-${key}`])
             }
-          } else if (typeof this.props[prop] !== 'undefined' && typeof styles.theme[prop] === 'function') {
+          }
+
+          // dynamic theme + has a prop value
+          if (isDynamic && typeof this.props[prop] !== 'undefined') {
             // dynamic themes
             const dynStyles = styles.theme[prop](this.props)
             const dynKeys = Object.keys(dynStyles).filter(tag => allKeys.indexOf(tag) > -1)
@@ -113,11 +118,6 @@ export default (Child, parentStyles, styles, opts, getDynamicStyles, getDynamicS
               }
             }
           }
-          // media queries as themes
-          // else if (prop[0] === '@') {
-          //   for (const key of themeKeys[prop]) {
-          //   }
-          // }
         }
       }
     }
