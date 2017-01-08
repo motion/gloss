@@ -3,13 +3,16 @@ import { StyleSheet } from './stylesheet'
 import { pickBy } from 'lodash'
 import { applyNiceStyles, flattenThemes, isFunc } from './helpers'
 
+import { colorToString } from 'motion-nice-styles'
+console.log('cts', colorToString)
+
 export { colorToString } from 'motion-nice-styles'
 export type { Transform, Color } from 'motion-nice-styles'
 
 // defaults
 const defaultOpts = {}
 
-module.exports = function motionStyle(opts = defaultOpts) {
+export default function motionStyle(opts = defaultOpts) {
   let baseStyles
 
   if (opts.baseStyles) {

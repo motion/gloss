@@ -94,7 +94,7 @@ function processObject(transform: Transform): string {
   return toReturn.join(' ')
 }
 
-function processStyles(styles: Object, includeEmpty: boolean = false, errorMessage: string = ''): Object {
+export default function processStyles(styles: Object, includeEmpty: boolean = false, errorMessage: string = ''): Object {
   const toReturn = {}
   for (const key in styles) {
     if (!styles.hasOwnProperty(key)) {
@@ -135,5 +135,3 @@ function processStyles(styles: Object, includeEmpty: boolean = false, errorMessa
   }
   return toReturn
 }
-
-module.exports = processStyles
