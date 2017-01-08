@@ -34,7 +34,7 @@ export function colorToString(color: Color) {
   if (isCSSAble(color)) {
     return getCSSVal(color)
   }
-  return color
+  return objectToColor(color)
 }
 
 function processArray(key: string, array: Array<number | string>): string {
