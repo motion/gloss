@@ -1,7 +1,9 @@
 /* @flow */
 
 import { objectToColor } from './helpers'
-import type { Transform } from './types'
+import type { Transform, Color } from './types'
+
+export type { Transform, Color } from './types'
 
 const COLOR_KEYS = new Set(['background'])
 const TRANSFORM_KEYS_MAP = {
@@ -23,6 +25,16 @@ function isCSSAble(val) {
 
 function getCSSVal(val) {
   return val.css ? val.css() : val.toCSS()
+}
+
+export function colorToString(color: Color) {
+  if (typeof color === 'string') {
+    return color
+  }
+  if (isCSSAble(color)) {
+    return getCSSVal(color)
+  }
+  return color
 }
 
 function processArray(key: string, array: Array<number | string>): string {
