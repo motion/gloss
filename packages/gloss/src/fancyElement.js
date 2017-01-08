@@ -10,7 +10,6 @@ const originalCreateElement = React.createElement
 export default (Child, parentStyles, styles, opts, getDynamicStyles, getDynamicSheets) => {
   const shouldTheme = !opts.dontTheme
   const processTheme = shouldTheme && Child.theme
-  const hasOwnStyles = !!(Child.style || shouldTheme && Child.theme)
 
   return function fancyElement(type, props, ...children) {
     // check for no props, no this (functional component), or no style key match
@@ -42,23 +41,27 @@ export default (Child, parentStyles, styles, opts, getDynamicStyles, getDynamicS
     //
     // 1. parent styles
     //
-    const parentStyleKeys = filterParentStyleKeys(propKeys)
+    let parentStyleKeys
 
-    if (parentStyles && parentStyleKeys.length) {
-      const parentStyleNames = parentStyleKeys.map(k => k.replace('$$', ''))
+    if (parentStyles) {
+      parentStyleKeys = filterParentStyleKeys(propKeys)
 
-      // dynamic
-      if (parentStyles.dynamics) {
-        const dynamics = getDynamicSheets(getDynamicStyles(parentStyleNames, props, parentStyles.dynamics, '$$'))
-        for (const sheet of dynamics) {
-          finalStyles.parents.push(sheet)
+      if (parentStyleKeys.length) {
+        const parentStyleNames = parentStyleKeys.map(k => k.replace('$$', ''))
+
+        // dynamic
+        if (parentStyles.dynamics) {
+          const dynamics = getDynamicSheets(getDynamicStyles(parentStyleNames, props, parentStyles.dynamics, '$$'))
+          for (const sheet of dynamics) {
+            finalStyles.parents.push(sheet)
+          }
         }
-      }
 
-      // static
-      if (parentStyles.statics) {
-        for (const key of parentStyleNames) {
-          finalStyles.parents.push(parentStyles.statics[key])
+        // static
+        if (parentStyles.statics) {
+          for (const key of parentStyleNames) {
+            finalStyles.parents.push(parentStyles.statics[key])
+          }
         }
       }
     }
@@ -66,8 +69,8 @@ export default (Child, parentStyles, styles, opts, getDynamicStyles, getDynamicS
     //
     // 2. own styles
     //
-    // static
-    if (hasOwnStyles) {
+    if (Child.style) {
+      // static
       if (styles.statics) {
         for (const key of allKeys) {
           finalStyles[key].push(styles.statics[key])
@@ -127,7 +130,7 @@ export default (Child, parentStyles, styles, opts, getDynamicStyles, getDynamicS
     //
 
     // remove style props
-    const newProps = omit(props, [...styleKeys, ...parentStyleKeys])
+    const newProps = omit(props, [].concat(styleKeys, parentStyleKeys))
 
     // gather styles flat
     const activeStyles = objToFlatArray(finalStyles)
