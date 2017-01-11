@@ -17,3 +17,12 @@ Turns objects into nice CSS styles. Has a few helpers:
 - Recurses into media queries + & selectors
   `'@media screen': { ... }`
   `'& child': { ... }`
+- Shorthands
+  ```
+  {
+    borderLeftRadius: ['borderTopLeftRadius', 'borderBottomLeftRadius'],
+    borderRightRadius: ['borderTopRightRadius', 'borderBottomRightRadius'],
+    borderBottomRadius: ['borderBottomLeftRadius', 'borderBottomRightRadius'],
+    borderTopRadius: ['borderTopRightRadius', 'borderTopLeftRadius'],
+  }
+  ```

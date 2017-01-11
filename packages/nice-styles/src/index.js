@@ -13,6 +13,13 @@ const TRANSFORM_KEYS_MAP = {
   dropShadow: 'drop-shadow'
 }
 
+const SHORTHANDS = {
+  borderLeftRadius: ['borderTopLeftRadius', 'borderBottomLeftRadius'],
+  borderRightRadius: ['borderTopRightRadius', 'borderBottomRightRadius'],
+  borderBottomRadius: ['borderBottomLeftRadius', 'borderBottomRightRadius'],
+  borderTopRadius: ['borderTopRightRadius', 'borderTopLeftRadius'],
+}
+
 function isFloat(n) {
   return n === +n && n !== (n | 0)
 }
@@ -96,11 +103,25 @@ function processObject(transform: Transform): string {
 
 export default function processStyles(styles: Object, includeEmpty: boolean = false, errorMessage: string = ''): Object {
   const toReturn = {}
-  for (const key in styles) {
+  for (let key in styles) {
     if (!styles.hasOwnProperty(key)) {
       continue
     }
+
     const value = styles[key]
+
+    // shorthands
+    if (SHORTHANDS[key]) {
+      key = SHORTHANDS[key]
+
+      // expand into multiple
+      if (Array.isArray(key)) {
+        key.forEach(k => {
+          toReturn[k] = processStyles(styles[k])
+        })
+        continue
+      }
+    }
     if ((typeof value === 'undefined' || value === null) && !includeEmpty) {
       continue
     }
