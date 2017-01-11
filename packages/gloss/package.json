@@ -1,6 +1,6 @@
 {
   "name": "gloss",
-  "version": "5.0.4",
+  "version": "5.0.5",
   "description": "Higher order component for nicer component styles",
   "main": "lib/index.js",
   "scripts": {
@@ -23,7 +23,7 @@
     "jss": "^6.1.1",
     "jss-preset-default": "^1.2.1",
     "lodash": "^4.14.0",
-    "motion-nice-styles": "^5.0.4"
+    "motion-nice-styles": "^5.0.5"
   },
   "devDependencies": {
     "enzyme": "^2.4.1",
