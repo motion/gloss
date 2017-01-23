@@ -1,9 +1,10 @@
-/* @flow */
+// @flow
+import { objectToColor, isCSSAble, getCSSVal } from './helpers'
+import type { Transform } from './types'
 
-import { objectToColor } from './helpers'
-import type { Transform, Color } from './types'
-
+// exports
 export type { Transform, Color } from './types'
+export * from './helpers'
 
 const COLOR_KEYS = new Set(['background'])
 const TRANSFORM_KEYS_MAP = {
@@ -24,33 +25,13 @@ function isFloat(n) {
   return n === +n && n !== (n | 0)
 }
 
-function isCSSAble(val) {
-  return val !== null && (typeof val).match(/function|object/) && (
-    typeof val.toCSS === 'function' || typeof val.css === 'function'
-  )
-}
-
-function getCSSVal(val) {
-  return val.css ? val.css() : val.toCSS()
-}
-
-export function colorToString(color: Color) {
-  if (typeof color === 'string') {
-    return color
-  }
-  if (isCSSAble(color)) {
-    return getCSSVal(color)
-  }
-  return objectToColor(color)
-}
-
 function processArray(key: string, array: Array<number | string>): string {
   // solid default option for borders
   if (key.indexOf('border') === 0 && array.length === 2) {
     array.push('solid')
   }
 
-  return array.map(function(style) {
+  return array.map(style => {
     // recurse
     if (Array.isArray(style)) {
       return objectToColor(style)
@@ -109,6 +90,7 @@ export default function processStyles(styles: Object, includeEmpty: boolean = fa
     }
 
     const value = styles[key]
+    const valueType = typeof value
 
     // shorthands
     if (SHORTHANDS[key]) {
@@ -122,10 +104,10 @@ export default function processStyles(styles: Object, includeEmpty: boolean = fa
         continue
       }
     }
-    if ((typeof value === 'undefined' || value === null) && !includeEmpty) {
+    if ((valueType === 'undefined' || value === null) && !includeEmpty) {
       continue
     }
-    if (typeof value === 'string' || typeof value === 'number') {
+    if (valueType === 'string' || valueType === 'number') {
       toReturn[key] = value
       continue
     }
@@ -137,21 +119,25 @@ export default function processStyles(styles: Object, includeEmpty: boolean = fa
       toReturn[key] = objectToColor(value)
       continue
     }
-    if (key === 'transform' || key === 'filter') {
-      toReturn[key] = processObject(value)
-      continue
-    }
+
     // recurse into object (psuedo or media query)
+    // before object processing
     const firstChar = key.substr(0, 1)
 
     if (firstChar === '@' || firstChar === '&') {
       toReturn[key] = processStyles(value)
       continue
     }
+
+    // objects
     if (Array.isArray(value)) {
       toReturn[key] = processArray(key, value)
       continue
+    } else if (valueType === 'object') {
+      toReturn[key] = processObject(value)
+      continue
     }
+
     throw new Error(`${errorMessage}: Invalid style value for ${key}: ${JSON.stringify(value)}`)
   }
   return toReturn
