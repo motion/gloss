@@ -1,6 +1,6 @@
 /* @flow */
 
-import type { Color } from './types'
+import type { Color, CSSArray, ToCSSAble } from './types'
 
 export function objectToColor(color: Color): string {
   if (Array.isArray(color)) {
@@ -13,42 +13,47 @@ export function objectToColor(color: Color): string {
     }
     throw new Error('Invalid color provided')
   }
-  if (color.a) {
-    return `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`
+  else if (typeof color === 'object') {
+    if (color.a) {
+      return `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`
+    }
+    return `rgb(${color.r}, ${color.g}, ${color.b})`
   }
-  return `rgb(${color.r}, ${color.g}, ${color.b})`
+  return color
 }
 
-export function expandCSSArray(given: number | Array) {
-  if (!Array.isArray(given)) {
+const arr3to4 = arr => [...arr, arr[1]]
+const arr2to4 = arr => [...arr, arr[0], arr[1]]
+const arr1to4 = arr => [...arr, arr[0], arr[0], arr[1]]
+
+export function expandCSSArray(given: number | Array<number>): CSSArray {
+  if (typeof given === 'number') {
     return [given, given, given, given]
   }
-
-  const oLen = given.length
-
-  if (oLen === 4) {
-    return given
+  if (Array.isArray(given)) {
+    switch(given.length) {
+      case 3: return arr3to4(given)
+      case 2: return arr2to4(given)
+      case 1: return arr1to4(given)
+      default: return given
+    }
   }
-
-  given[3] = given[1]
-
-  if (oLen === 3) {
-    return given
-  }
-
-  given[2] = given[0]
-
-  return given
+  throw new Error('Invalid type given')
 }
 
-export function isCSSAble(val) {
-  return val !== null && (typeof val).match(/function|object/) && (
+export function isCSSAble(val: any) {
+  return val !== null && typeof val === 'object' && (
     typeof val.toCSS === 'function' || typeof val.css === 'function'
   )
 }
 
-export function getCSSVal(val) {
-  return val.css ? val.css() : val.toCSS()
+export function getCSSVal(val: ToCSSAble) {
+  if (typeof val.css === 'function') {
+    return val.css()
+  }
+  if (typeof val.toCSS === 'function') {
+    return val.toCSS()
+  }
 }
 
 export function colorToString(color: Color) {

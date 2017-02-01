@@ -3,7 +3,7 @@
 /* @flow */
 
 import niceStyle from '../lib/index'
-import { it } from 'jasmine-fix'
+import { it, describe, expect } from 'jasmine-fix'
 
 const str = o => JSON.stringify(o)
 

@@ -1,3 +1,4 @@
+// @flow
 import fancyElementFactory from './fancyElement'
 import { StyleSheet } from './stylesheet'
 import { pickBy } from 'lodash'
@@ -9,7 +10,7 @@ export type { Transform, Color } from 'motion-nice-styles'
 // defaults
 const defaultOpts = {}
 
-export default function motionStyle(opts = defaultOpts) {
+export default function motionStyle(opts: Object = defaultOpts): Function {
   let baseStyles
 
   if (opts.baseStyles) {
@@ -38,7 +39,7 @@ export default function motionStyle(opts = defaultOpts) {
 }
 
 // option-based helpers
-function getDynamicStyles(activeKeys: Array, props: Object, styles: Object, propPrefix = '$') {
+function getDynamicStyles(activeKeys: Array<string>, props: Object, styles: Object, propPrefix = '$') {
   const dynamicKeys = activeKeys
     .filter(k => styles[k] && typeof styles[k] === 'function')
 
@@ -51,12 +52,12 @@ function getDynamicStyles(activeKeys: Array, props: Object, styles: Object, prop
   return dynamics
 }
 
-function getDynamicSheets(dynamics) {
+function getDynamicSheets(dynamics, name: string) {
   const sheet = StyleSheet.create(applyNiceStyles(dynamics, `${name}`))
   return Object.keys(dynamics).map(key => ({ ...sheet[key], isDynamic: true, key }))
 }
 
-function getStyles({ name, style }, theme) {
+function getStyles({ name, style }, theme: ?Object) {
   const styles = { ...style, ...flattenThemes(theme) }
 
   const dynamicStyles = pickBy(styles, isFunc)

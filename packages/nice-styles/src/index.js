@@ -37,10 +37,9 @@ function processArray(key: string, array: Array<number | string>): string {
       return objectToColor(style)
     }
     // toCSS support
-    if (isCSSAble(style)) {
+    if (typeof style === 'object' && isCSSAble(style)) {
       return getCSSVal(style)
     }
-
     return typeof style === 'number' ? `${style}px` : style
   }).join(' ')
 }
