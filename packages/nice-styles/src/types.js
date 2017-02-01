@@ -1,4 +1,4 @@
-/* @flow */
+// @flow
 
 type NoS = number | string
 
