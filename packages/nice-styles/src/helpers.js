@@ -13,7 +13,7 @@ export function objectToColor(color: Color): string {
     }
     throw new Error('Invalid color provided')
   }
-  else if (typeof color === 'object') {
+  if (typeof color === 'object') {
     if (color.a) {
       return `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`
     }
@@ -60,7 +60,7 @@ export function colorToString(color: Color) {
   if (typeof color === 'string') {
     return color
   }
-  if (isCSSAble(color)) {
+  if (typeof color === 'object' && isCSSAble(color)) {
     return getCSSVal(color)
   }
   return objectToColor(color)
