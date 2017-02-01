@@ -1,15 +1,15 @@
+// @flow
 import niceStyles from 'motion-nice-styles'
 
 // flatten theme key
 // { theme: { dark: { h1: { color: 'red' } } } }
 // => { dark-button: { h1: { color: 'red' } } }
-export const flattenThemes = themes => {
-  if (!themes) return {}
-
+export function flattenThemes(themes: ?Object) {
+  const themeObj = themes || {}
   let result = {}
 
-  Object.keys(themes).forEach(tKey => {
-    const theme = themes[tKey]
+  Object.keys(themeObj).forEach(tKey => {
+    const theme = themeObj[tKey]
 
     if (typeof theme === 'object') {
       result = {
@@ -29,7 +29,7 @@ export const flattenThemes = themes => {
   return result
 }
 
-export const applyNiceStyles = (styles, errorMessage) => {
+export function applyNiceStyles(styles: Object, errorMessage: string) {
   for (const style in styles) {
     if (!styles.hasOwnProperty(style)) {
       continue
@@ -43,6 +43,6 @@ export const applyNiceStyles = (styles, errorMessage) => {
   return styles
 }
 
-export const isFunc = x => typeof x === 'function'
-export const filterStyleKeys = arr => arr.filter(key => key[0] === '$' && key[1] !== '$')
-export const filterParentStyleKeys = arr => arr.filter(key => key[0] === '$' && key[1] === '$')
+export const isFunc = (x: any) => typeof x === 'function'
+export const filterStyleKeys = (arr: Array<string>) => arr.filter(key => key[0] === '$' && key[1] !== '$')
+export const filterParentStyleKeys = (arr: Array<string>) => arr.filter(key => key[0] === '$' && key[1] === '$')
