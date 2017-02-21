@@ -19,11 +19,12 @@ Combines a few things:
 - keeps html easy to read
 
 #### install
-If you plan on using gloss with a decorator, you'll want to add this to your babel config:
 
 ```js
-npm i -S gloss
+npm install --save gloss
 ```
+
+To use the gloss decorator, add this to your babel config:
 
 ```js
 {
