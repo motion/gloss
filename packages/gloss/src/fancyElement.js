@@ -6,17 +6,12 @@ import { filterStyleKeys, filterParentStyleKeys } from './helpers'
 const objToFlatArray = obj => Object.keys(obj).reduce((acc, cur) => [...acc, ...obj[cur]], [])
 const originalCreateElement = React.createElement
 
-// factory that return the this.fancyElement helper
-export default (Child, parentStyles, styles, opts, getDynamicStyles, getDynamicSheets) => {
+// factory that returns fancyElement helper
+export default function fancyElementFactory(theme, parentStyles, styles, opts, getDynamics, getSheet) {
   const shouldTheme = !opts.dontTheme
-  const processTheme = shouldTheme && Child.theme
+  const processTheme = shouldTheme && theme
 
   return function fancyElement(type, props, ...children) {
-    // check for no props, no this (functional component), or no style key match
-    if (!this) {
-      return originalCreateElement(type, props, ...children)
-    }
-
     // <... $one $two /> keys
     const propKeys = props ? Object.keys(props) : []
     const styleKeys = filterStyleKeys(propKeys)
@@ -51,7 +46,7 @@ export default (Child, parentStyles, styles, opts, getDynamicStyles, getDynamicS
 
         // dynamic
         if (parentStyles.dynamics) {
-          const dynamics = getDynamicSheets(getDynamicStyles(parentStyleNames, props, parentStyles.dynamics, '$$'))
+          const dynamics = getSheet(getDynamics(parentStyleNames, props, parentStyles.dynamics, '$$'))
           for (const sheet of dynamics) {
             finalStyles.parents.push(sheet)
           }
@@ -69,20 +64,18 @@ export default (Child, parentStyles, styles, opts, getDynamicStyles, getDynamicS
     //
     // 2. own styles
     //
-    if (Child.style) {
-      // static
-      if (styles.statics) {
-        for (const key of allKeys) {
-          finalStyles[key].push(styles.statics[key])
-        }
+    // static
+    if (styles.statics) {
+      for (const key of allKeys) {
+        finalStyles[key].push(styles.statics[key])
       }
+    }
 
-      // dynamic
-      if (styles.dynamics && activeKeys.length) {
-        const dynamics = getDynamicSheets(getDynamicStyles(activeKeys, props, styles.dynamics))
-        for (const sheet of dynamics) {
-          finalStyles[sheet.key].push(sheet)
-        }
+    // dynamic
+    if (styles.dynamics && activeKeys.length) {
+      const dynamics = getSheet(getDynamics(activeKeys, props, styles.dynamics))
+      for (const sheet of dynamics) {
+        finalStyles[sheet.key].push(sheet)
       }
     }
 
@@ -115,7 +108,7 @@ export default (Child, parentStyles, styles, opts, getDynamicStyles, getDynamicS
 
             if (dynKeys.length) {
               const activeDynamics = dynKeys.reduce((acc, cur) => ({ ...acc, [cur]: dynStyles[cur] }), {})
-              const dynamics = getDynamicSheets(activeDynamics)
+              const dynamics = getSheet(activeDynamics)
               for (const sheet of dynamics) {
                 finalStyles[sheet.key].push(sheet)
               }

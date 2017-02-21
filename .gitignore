@@ -10,3 +10,4 @@ deps/
 out/
 .tmp
 npm-shrinkwrap.json
+.vscode

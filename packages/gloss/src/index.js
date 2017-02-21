@@ -1,5 +1,5 @@
 // @flow
-import fancyElementFactory from './fancyElement'
+import fancyElFactory from './fancyElement'
 import { StyleSheet } from './stylesheet'
 import { pickBy } from 'lodash'
 import { applyNiceStyles, flattenThemes, isFunc } from './helpers'
@@ -7,68 +7,62 @@ import { applyNiceStyles, flattenThemes, isFunc } from './helpers'
 export { colorToString, objectToColor, expandCSSArray } from 'motion-nice-styles'
 export type { Transform, Color } from 'motion-nice-styles'
 
-// defaults
-const defaultOpts = {}
-
-export default function motionStyle(opts: Object = defaultOpts): Function {
-  let baseStyles
-
-  if (opts.baseStyles) {
-    baseStyles = getStyles({ name: 'Gloss Parent Styles', style: opts.baseStyles }, null)
-  }
-
-  // decorator
-  const decorator = (Child) => {
-    // add to Child.prototype, so the decorated class can access: this.fancyElement
-    const styles = getStyles(Child, opts.dontTheme ? null : Child.theme)
-    Child.prototype.fancyElement = fancyElementFactory(Child, baseStyles, styles, opts, getDynamicStyles, getDynamicSheets)
-
-    // allows this.addTheme('theme') from within a component
-    const setTheme = val => function(...names) {
-      for (const name of names) {
-        this.__activeThemes = this.__activeThemes || {}
-        this.__activeThemes[name] = val
-      }
-    }
-    Child.prototype.addTheme = setTheme(true)
-    Child.prototype.removeTheme = setTheme(false)
-    return Child
-  }
-
-  return decorator
-}
-
-// option-based helpers
-function getDynamicStyles(activeKeys: Array<string>, props: Object, styles: Object, propPrefix = '$') {
+function getDynamics(activeKeys: Array<string>, props: Object, styles: Object, propPrefix = '$') {
   const dynamicKeys = activeKeys
     .filter(k => styles[k] && typeof styles[k] === 'function')
-
   const dynamics = dynamicKeys
     .reduce((acc, key) => ({
       ...acc,
       [key]: styles[key](props[`${propPrefix}${key}`])
     }), {})
-
   return dynamics
 }
 
-function getDynamicSheets(dynamics, name: string) {
+function getSheets(dynamics, name: string) {
   const sheet = StyleSheet.create(applyNiceStyles(dynamics, `${name}`))
   return Object.keys(dynamics).map(key => ({ ...sheet[key], isDynamic: true, key }))
 }
 
 function getStyles({ name, style }, theme: ?Object) {
   const styles = { ...style, ...flattenThemes(theme) }
-
   const dynamicStyles = pickBy(styles, isFunc)
-
   const staticStyles = pickBy(styles, x => !isFunc(x))
   const niceStatics = applyNiceStyles(staticStyles, `${name}:`)
   const statics = StyleSheet.create(niceStatics)
-
   return {
     statics,
     dynamics: dynamicStyles,
     theme
   }
 }
+
+export default function glossFactory(opts: Object = {}): Function {
+  let baseStyles
+  if (opts.baseStyles) {
+    baseStyles = getStyles({ name: 'Gloss Parent Styles', style: opts.baseStyles }, null)
+  }
+
+  const fancyEl = (styles, theme) =>
+    fancyElFactory(theme, baseStyles, styles, opts, getDynamics, getSheets)
+
+  return function gloss(ChildOrName: Function | string, style: ?Object) {
+    // shorthand
+    if (typeof ChildOrName === 'string') {
+      const name = ChildOrName
+      const createEl = fancyEl(getStyles({ name, style: { [name]: style } }))
+      return props => createEl(name, props)
+    }
+
+    // using as decorator for class
+    const Child = ChildOrName
+
+    // shim this.fancyElement
+    Child.prototype.fancyElement = fancyEl(
+      getStyles(Child, opts.dontTheme ? null : Child.theme),
+      Child.theme
+    )
+
+    return Child
+  }
+}
+
