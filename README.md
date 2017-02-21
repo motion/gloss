@@ -9,9 +9,85 @@ Combines a few things:
 - Advanced theme engine
 - Babel plugin to allow simpler $style props
 
-
-example
+features
 ---
+
+- small library, relies on other small libraries
+- auto prefixes
+- supports pseudos
+- supports media queries
+- themes are far easier way to restyle multiple elements
+- powerful js object-based styles
+- dynamic and static styles
+- keeps html easy to read
+
+install
+---
+If you plan on using gloss with a decorator, you'll want to add this to your babel config:
+
+```js
+{
+  "babel": {
+    "plugins": [
+      ["gloss/transform", { "decoratorName": "style" }]
+    ]
+  }
+}
+```
+
+usage
+---
+Gloss must first be instantiated, and supports two options:
+
+```js
+import gloss from 'gloss'
+
+export const style = gloss({
+  // when on, slightly faster performance but no theme support
+  dontTheme: false,
+  // optional object with base styles that are accessible using $$props
+  baseStyles: {
+    fullscreen: {
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0
+    }
+  }
+})
+
+// to use later in app:
+// import { style } from './path/to/glossSetup'
+```
+
+For more information on how to write styles, see:
+
+- shorthands: [motion-nice-styles](https://github.com/motion/gloss/tree/master/packages/nice-styles)
+- base synax: [JSS](https://github.com/cssinjs/jss)
+
+examples
+---
+
+```js
+// Gloss comes with a shorthand for simple styles:
+import gloss from 'gloss'
+
+const glossy = gloss()
+
+export const Title = glossy('h1', {
+  border: [1, '#eee'],
+  background: 'azure',
+  fontSize: 22
+})
+
+export const Page = glossy('section', (props) => ({
+  padding: 20,
+  background: props.background,
+}))
+```
+
+A small view using the decorator:
 
 ```js
 import gloss from 'gloss'
@@ -36,56 +112,10 @@ const style = gloss()
     bg: color => ({
       background: color,
       borderBottom: [2, 'solid', color]
-    }),
+    })
   }
 }
 ```
-
-install
----
-Add babel transform:
-
-```js
-{
-  "babel": {
-    "plugins": [
-      ["gloss/transform", { "decoratorName": "style" }]
-    ]
-  }
-}
-```
-
-usage
----
-Gloss supports just two options for now:
-
-```js
-import gloss from 'gloss'
-
-const style = gloss({
-  dontTheme: false, // turn on to ignore themes
-  baseStyles: null, // object: styles
-})
-
-```
-
-For more information on how to write styles, see:
-
-- [JSS](https://github.com/cssinjs/jss)
-- [motion-nice-styles](https://github.com/motion/gloss/tree/master/packages/nice-styles)
-
-
-features
----
-
-- small library, relies on other small libraries
-- auto prefixes
-- supports pseudos
-- supports media queries
-- themes are far easier way to restyle multiple elements
-- powerful js object-based styles
-- dynamic and static styles
-- keeps html easy to read
 
 themes
 ---
@@ -119,7 +149,7 @@ const style = gloss()
     },
     h1: {
       fontSize: 22,
-    },
+    }
   }
 
   static theme = {
@@ -137,8 +167,8 @@ const style = gloss()
       },
       h1: {
         color: props.color,
-      },
-    }),
+      }
+    })
   }
 }
 
