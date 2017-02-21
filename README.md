@@ -8,7 +8,7 @@ Combines a few things:
 - Advanced theme engine
 - Babel plugin to allow simpler $style props
 
-#### features
+### features
 - small library, relies on other small libraries
 - auto prefixes
 - supports pseudos
@@ -18,7 +18,7 @@ Combines a few things:
 - dynamic and static styles
 - keeps html easy to read
 
-#### install
+### install
 
 ```js
 npm install --save gloss
@@ -36,7 +36,7 @@ To use the gloss decorator, add this to your babel config:
 }
 ```
 
-#### usage
+### usage
 Gloss must first be instantiated, and supports two options:
 
 ```js
@@ -66,7 +66,7 @@ For more information on how to write styles, see:
 - shorthands: [motion-nice-styles](https://github.com/motion/gloss/tree/master/packages/nice-styles)
 - base synax: [JSS](https://github.com/cssinjs/jss)
 
-#### examples
+### examples
 
 ```js
 // Gloss comes with a shorthand for simple styles:
@@ -116,7 +116,7 @@ const style = gloss()
 }
 ```
 
-#### themes
+### themes
 
 Use themes for really easy variant looks for components. Gives you complete control to
 change multiple elements with a single prop.
@@ -174,12 +174,12 @@ const style = gloss()
 React.render(<Title big tint="yellow" />, document.getElementById('app'))
 ```
 
-#### Differences between style and theme:
+### Differences between style and theme:
 
 - Theme requires a further nesting of objects, to specify which tag to target for each style
 - Theme passes in all props if you specify a function! This gives more power to use any prop to affect the styling within a given specific theme property.
 
-#### base styles
+### base styles
 
 Helpful for maintaining a common set of styles for every component. Using `$$` to access keeps things explicit.
 
@@ -214,7 +214,7 @@ class extends React.Component {
 ```
 
 
-#### more advanced
+### more advanced
 how to make low level components
 
 ```js
@@ -269,6 +269,6 @@ export default class Section {
 }
 ```
 
-#### contributing
+### contributing
 
 After cloning this repo, run `npm run bootstrap`. You can then link it into an app and make changes.
