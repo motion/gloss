@@ -1,5 +1,5 @@
-import aphrodisiac from 'aphrodisiac'
+import aphrodite from 'aphrodite-jss'
 import preset from 'jss-preset-default'
 import { create } from 'jss'
 
-export const { css, StyleSheet } = aphrodisiac(create(preset()))
+export const { css, StyleSheet } = aphrodite(create(preset()))
