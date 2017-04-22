@@ -64,23 +64,20 @@ export const style = gloss({
 For more information on how to write styles, see:
 
 - shorthands: [motion-nice-styles](https://github.com/motion/gloss/tree/master/packages/nice-styles)
-- base synax: [JSS](https://github.com/cssinjs/jss)
+- syntax: [JSS](https://github.com/cssinjs/jss)
 
 ### examples
 
 ```js
-// Gloss comes with a shorthand for simple styles:
-import gloss from 'gloss'
+import $ from './gloss'
 
-const glossy = gloss()
-
-export const Title = glossy('h1', {
+export const Title = $('h1', {
   border: [1, '#eee'],
   background: 'azure',
   fontSize: 22
 })
 
-export const Page = glossy('section', (props) => ({
+export const Page = $('section', (props) => ({
   padding: 20,
   background: props.background,
 }))
@@ -89,9 +86,7 @@ export const Page = glossy('section', (props) => ({
 A small view using the decorator:
 
 ```js
-import gloss from 'gloss'
-
-const style = gloss()
+import style from './gloss'
 
 @style class extends Component {
   render() {
@@ -122,9 +117,7 @@ Use themes for really easy variant looks for components. Gives you complete cont
 change multiple elements with a single prop.
 
 ```js
-import gloss from 'gloss'
-
-const style = gloss()
+import style from './gloss'
 
 @style class Title extends React.Component {
   render() {
@@ -220,6 +213,7 @@ how to make low level components
 ```js
 import gloss from 'gloss'
 
+// import this usually from ./gloss.js
 const style = gloss({
   baseStyles: {
     red: {
@@ -271,4 +265,4 @@ export default class Section {
 
 ### contributing
 
-After cloning this repo, run `npm run bootstrap`. You can then link it into an app and make changes.
+After cloning this repo, run `npm run bootstrap`. You can then link it into your app `npm link gloss` and test changes.
