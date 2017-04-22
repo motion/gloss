@@ -15,14 +15,18 @@ export function flattenThemes(themes: ?Object) {
       result = {
         ...result,
         // flatten themes to `theme-tag: {}`
-        ...Object.keys(theme)
-            .reduce((res, key) => ({ ...res, [`${tKey}-${key}`]: theme[key] }), {})
+        ...Object.keys(theme).reduce(
+          (res, key) => ({ ...res, [`${tKey}-${key}`]: theme[key] }),
+          {}
+        ),
       }
     } else if (typeof theme === 'function') {
       // skip function themes
       return
     } else {
-      console.log(`Note: themes must be an object or function, "${tKey}" is a ${typeof tKey}`)
+      console.log(
+        `Note: themes must be an object or function, "${tKey}" is a ${typeof tKey}`
+      )
     }
   })
 
@@ -44,5 +48,7 @@ export function applyNiceStyles(styles: Object, errorMessage: string) {
 }
 
 export const isFunc = (x: any) => typeof x === 'function'
-export const filterStyleKeys = (arr: Array<string>) => arr.filter(key => key[0] === '$' && key[1] !== '$')
-export const filterParentStyleKeys = (arr: Array<string>) => arr.filter(key => key[0] === '$' && key[1] === '$')
+export const filterStyleKeys = (arr: Array<string>) =>
+  arr.filter(key => key[0] === '$' && key[1] !== '$')
+export const filterParentStyleKeys = (arr: Array<string>) =>
+  arr.filter(key => key[0] === '$' && key[1] === '$')

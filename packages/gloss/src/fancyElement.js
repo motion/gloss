@@ -3,11 +3,19 @@ import { css } from './stylesheet'
 import { omit } from 'lodash'
 import { filterStyleKeys, filterParentStyleKeys } from './helpers'
 
-const objToFlatArray = obj => Object.keys(obj).reduce((acc, cur) => [...acc, ...obj[cur]], [])
+const objToFlatArray = obj =>
+  Object.keys(obj).reduce((acc, cur) => [...acc, ...obj[cur]], [])
 const originalCreateElement = React.createElement
 
 // factory that returns fancyElement helper
-export default function fancyElementFactory(theme, parentStyles, styles, opts, getDynamics, getSheet) {
+export default function fancyElementFactory(
+  theme,
+  parentStyles,
+  styles,
+  opts,
+  getDynamics,
+  getSheet
+) {
   const shouldTheme = !opts.dontTheme
   const processTheme = shouldTheme && theme
 
@@ -28,10 +36,13 @@ export default function fancyElementFactory(theme, parentStyles, styles, opts, g
 
     // collect styles, in order
     // { propKey: [styles] }
-    const finalStyles = allKeys.reduce((acc, cur) => {
-      acc[cur] = []
-      return acc
-    }, { parents: [] })
+    const finalStyles = allKeys.reduce(
+      (acc, cur) => {
+        acc[cur] = []
+        return acc
+      },
+      { parents: [] }
+    )
 
     //
     // 1. parent styles
@@ -46,7 +57,9 @@ export default function fancyElementFactory(theme, parentStyles, styles, opts, g
 
         // dynamic
         if (parentStyles.dynamics) {
-          const dynamics = getSheet(getDynamics(parentStyleNames, props, parentStyles.dynamics, '$$'))
+          const dynamics = getSheet(
+            getDynamics(parentStyleNames, props, parentStyles.dynamics, '$$')
+          )
           for (const sheet of dynamics) {
             finalStyles.parents.push(sheet)
           }
@@ -104,10 +117,15 @@ export default function fancyElementFactory(theme, parentStyles, styles, opts, g
           if (isDynamic && typeof this.props[prop] !== 'undefined') {
             // dynamic themes
             const dynStyles = styles.theme[prop](this.props)
-            const dynKeys = Object.keys(dynStyles).filter(tag => allKeys.indexOf(tag) > -1)
+            const dynKeys = Object.keys(dynStyles).filter(
+              tag => allKeys.indexOf(tag) > -1
+            )
 
             if (dynKeys.length) {
-              const activeDynamics = dynKeys.reduce((acc, cur) => ({ ...acc, [cur]: dynStyles[cur] }), {})
+              const activeDynamics = dynKeys.reduce(
+                (acc, cur) => ({ ...acc, [cur]: dynStyles[cur] }),
+                {}
+              )
               const dynamics = getSheet(activeDynamics)
               for (const sheet of dynamics) {
                 finalStyles[sheet.key].push(sheet)
