@@ -31,29 +31,44 @@ export function expandCSSArray(given: number | Array<number>): CSSArray {
     return [given, given, given, given]
   }
   if (Array.isArray(given)) {
-    switch(given.length) {
-      case 3: return arr3to4(given)
-      case 2: return arr2to4(given)
-      case 1: return arr1to4(given)
-      default: return given
+    switch (given.length) {
+      case 3:
+        return arr3to4(given)
+      case 2:
+        return arr2to4(given)
+      case 1:
+        return arr1to4(given)
+      default:
+        return given
     }
   }
   throw new Error('Invalid type given')
 }
 
 export function isCSSAble(val: any) {
-  return val !== null && typeof val === 'object' && (
-    typeof val.toCSS === 'function' || typeof val.css === 'function'
+  return (
+    val !== null &&
+    typeof val === 'object' &&
+    (typeof val.toCSS === 'function' || typeof val.css === 'function')
   )
 }
 
 export function getCSSVal(val: ToCSSAble) {
+  let res = val
   if (typeof val.css === 'function') {
-    return val.css()
+    res = val.css()
+  } else if (typeof val.toCSS === 'function') {
+    res = val.toCSS()
+  } else if (typeof val.rgba === 'function') {
+    res = val.rgba()
+  } else if (typeof val.rgb === 'function') {
+    res = val.rgb()
   }
-  if (typeof val.toCSS === 'function') {
-    return val.toCSS()
+  // return
+  if (typeof res.toString === 'function') {
+    return res.toString()
   }
+  return res
 }
 
 export function colorToString(color: Color) {

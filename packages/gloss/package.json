@@ -12,8 +12,8 @@
   "homepage": "https://github.com/motion/motion",
   "dependencies": {
     "aphrodite-jss": "^1.0.0",
-    "jss": "^6.0.1",
-    "jss-preset-default": "^1.1.0",
+    "jss": "^7.1.1",
+    "jss-preset-default": "^2.0.0",
     "lodash": "^4.17.4",
     "motion-nice-styles": "^5.0.6"
   },
