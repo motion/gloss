@@ -49,7 +49,10 @@ export function isCSSAble(val: any) {
   return (
     val !== null &&
     typeof val === 'object' &&
-    (typeof val.toCSS === 'function' || typeof val.css === 'function')
+    (typeof val.toCSS === 'function' ||
+      typeof val.css === 'function' ||
+      typeof val.rgb === 'function' ||
+      typeof val.rgba === 'function')
   )
 }
 
