@@ -1,5 +1,5 @@
 // @flow
-import niceStyles from 'motion-nice-styles'
+import css from 'motion-css'
 
 // flatten theme key
 // { theme: { dark: { h1: { color: 'red' } } } }
@@ -40,7 +40,7 @@ export function applyNiceStyles(styles: Object, errorMessage: string) {
     }
     const value = styles[style]
     if (value) {
-      styles[style] = niceStyles(value, false, errorMessage)
+      styles[style] = css(value, false, errorMessage)
     }
   }
 

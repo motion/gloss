@@ -4,12 +4,8 @@ import { StyleSheet } from './stylesheet'
 import { pickBy } from 'lodash'
 import { applyNiceStyles, flattenThemes, isFunc } from './helpers'
 
-export {
-  colorToString,
-  objectToColor,
-  expandCSSArray,
-} from 'motion-nice-styles'
-export type { Transform, Color } from 'motion-nice-styles'
+export { colorToString, objectToColor, expandCSSArray } from 'motion-css'
+export type { Transform, Color } from 'motion-css'
 
 function getDynamics(
   activeKeys: Array<string>,

@@ -1,4 +1,4 @@
-## motion-nice-styles
+## motion-css
 
 Turns objects into nice CSS styles. Has a few helpers:
 

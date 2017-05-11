@@ -4,7 +4,7 @@ HOC for making style a first class citizen of components. Inline styles for all.
 Combines a few things:
 
 - [JSS](https://github.com/cssinjs/jss) styles
-- [motion-nice-styles](https://github.com/motion/gloss/tree/master/packages/nice-styles) for powerful JS syntax for styles
+- [motion-css](https://github.com/motion/gloss/tree/master/packages/nice-styles) for powerful JS syntax for styles
 - Advanced theme engine
 - Babel plugin to allow simpler $style props
 
@@ -63,7 +63,7 @@ export const style = gloss({
 
 For more information on how to write styles, see:
 
-- shorthands: [motion-nice-styles](https://github.com/motion/gloss/tree/master/packages/nice-styles)
+- shorthands: [motion-css](https://github.com/motion/gloss/tree/master/packages/nice-styles)
 - syntax: [JSS](https://github.com/cssinjs/jss)
 
 ### examples
