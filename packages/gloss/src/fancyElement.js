@@ -2,8 +2,17 @@ import React from 'react'
 import { css } from './stylesheet'
 import { omit } from 'lodash'
 import { filterStyleKeys, filterParentStyleKeys } from './helpers'
+import deepExtend from 'deep-extend'
 
 const flatten = arr => [].concat.apply([], arr)
+
+const arrayOfObjectsToObject = arr => {
+  let res = arr[0]
+  for (let i = 1; i < arr.length; i++) {
+    deepExtend(res, arr[i])
+  }
+  return res
+}
 
 const objToFlatArray = obj =>
   Object.keys(obj).reduce((acc, cur) => [...acc, ...obj[cur]], [])
@@ -149,9 +158,10 @@ export default function fancyElementFactory(
 
     // gather styles flat
     const activeStyles = objToFlatArray(finalStyles)
-    const hasStyleProp = props && props.style
+    const hasStyleProp = props && props.style && props.style.gloss === true
 
     if (hasStyleProp || activeStyles.length) {
+      // tags get classnames
       if (isTag) {
         if (hasStyleProp) {
           activeStyles.push({ style: props.style })
@@ -166,21 +176,35 @@ export default function fancyElementFactory(
           newProps.className += ` ${props.className}`
         }
       } else {
-        // find all style in order and merge into flat array
+        // components get a style prop
+        // filter for both $ and style props to merge them properly
+        const keysIncludingStyle = propKeys.filter(
+          key => key[0] === '$' || key === 'style'
+        )
+
+        // find all styles in order and merge into flat array
         const allStyles = flatten(
-          allStyleKeys.map(
-            key =>
-              key[1] === '$'
-                ? finalStyles.parents.filter(x => x && x.key === key.slice(2))
-                : finalStyles[key.slice(1)]
-          )
+          keysIncludingStyle.map(key => {
+            if (key === 'style') {
+              return props[key]
+            }
+            const styles = key[1] === '$'
+              ? finalStyles.parents.filter(x => x && x.key === key.slice(2))
+              : finalStyles[key.slice(1)]
+
+            if (!styles) {
+              return null
+            }
+
+            const flattened = styles
+              .filter(style => !!style)
+              .map(style => style && style.style)
+            return arrayOfObjectsToObject(flattened)
+          })
         ).filter(style => !!style)
 
-        // merge together
-        newProps.style = allStyles.reduce(
-          (acc, cur) => ({ ...acc, ...cur.style }),
-          {}
-        )
+        // merge together nicely
+        newProps.style = arrayOfObjectsToObject(allStyles)
       }
     }
 
