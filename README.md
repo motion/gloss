@@ -206,6 +206,24 @@ class extends React.Component {
 }
 ```
 
+### glossy style props
+
+Gloss now supports optionally handling your style props:
+
+```js
+@style
+class extends React.Component {
+  render() {
+    return (
+      <div style={{ gloss: true, background: 'red', '&:hover': { background: 'yellow' } }}>
+        <h1>Test1</h1>
+        <h1>Test2</h1>
+      </div>
+    )
+  }
+}
+```
+
 
 ### more advanced
 how to make low level components
