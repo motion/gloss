@@ -56,6 +56,7 @@ export function isCSSAble(val: any) {
   )
 }
 
+// attempts to work with a variety of css libraries
 export function getCSSVal(val: ToCSSAble) {
   let res = val
   if (typeof val.css === 'function') {
@@ -67,8 +68,7 @@ export function getCSSVal(val: ToCSSAble) {
   } else if (typeof val.rgb === 'function') {
     res = val.rgb()
   }
-  // return
-  if (typeof res.toString === 'function') {
+  if (typeof res !== 'string') {
     return res.toString()
   }
   return res

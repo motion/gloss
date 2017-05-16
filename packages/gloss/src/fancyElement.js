@@ -3,9 +3,12 @@ import { css } from './stylesheet'
 import { omit } from 'lodash'
 import { filterStyleKeys, filterParentStyleKeys } from './helpers'
 
+const flatten = arr => [].concat.apply([], arr)
+
 const objToFlatArray = obj =>
   Object.keys(obj).reduce((acc, cur) => [...acc, ...obj[cur]], [])
-const originalCreateElement = React.createElement
+
+const ogCreateElement = React.createElement
 
 // factory that returns fancyElement helper
 export default function fancyElementFactory(
@@ -141,21 +144,46 @@ export default function fancyElementFactory(
     //
 
     // remove style props
-    const newProps = omit(props, [].concat(styleKeys, parentStyleKeys))
+    const allStyleKeys = propKeys.filter(key => key[0] === '$')
+    const newProps = omit(props, allStyleKeys)
 
     // gather styles flat
     const activeStyles = objToFlatArray(finalStyles)
+    const hasStyleProp = props && props.style
 
-    if (activeStyles.length) {
-      // apply styles
-      newProps.className = css(...activeStyles)
+    if (hasStyleProp || activeStyles.length) {
+      if (isTag) {
+        if (hasStyleProp) {
+          activeStyles.push({ style: props.style })
+          delete newProps.style
+        }
 
-      // keep original classNames
-      if (props && props.className && typeof props.className === 'string') {
-        newProps.className += ` ${props.className}`
+        // apply styles
+        newProps.className = css(...activeStyles)
+
+        // keep original classNames
+        if (props && props.className && typeof props.className === 'string') {
+          newProps.className += ` ${props.className}`
+        }
+      } else {
+        // find all style in order and merge into flat array
+        const allStyles = flatten(
+          allStyleKeys.map(
+            key =>
+              key[1] === '$'
+                ? finalStyles.parents.filter(x => x && x.key === key.slice(2))
+                : finalStyles[key.slice(1)]
+          )
+        ).filter(style => !!style)
+
+        // merge together
+        newProps.style = allStyles.reduce(
+          (acc, cur) => ({ ...acc, ...cur.style }),
+          {}
+        )
       }
     }
 
-    return originalCreateElement(type, newProps, ...children)
+    return ogCreateElement(type, newProps, ...children)
   }
 }
