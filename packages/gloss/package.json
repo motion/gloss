@@ -1,6 +1,6 @@
 {
   "name": "gloss",
-  "version": "6.0.1",
+  "version": "6.0.2",
   "description": "Higher order component for nicer component styles",
   "main": "lib/index.js",
   "repository": {
