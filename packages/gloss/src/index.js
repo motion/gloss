@@ -7,40 +7,16 @@ import { applyNiceStyles, flattenThemes, isFunc } from './helpers'
 export { colorToString, objectToColor, expandCSSArray } from 'motion-css'
 export type { Transform, Color } from 'motion-css'
 
-function getDynamics(
-  activeKeys: Array<string>,
-  props: Object,
-  styles: Object,
-  propPrefix = '$'
-) {
-  const dynamicKeys = activeKeys.filter(
-    k => styles[k] && typeof styles[k] === 'function'
-  )
-  const dynamics = dynamicKeys.reduce(
-    (acc, key) => ({
-      ...acc,
-      [key]: styles[key](props[`${propPrefix}${key}`]),
-    }),
-    {}
-  )
-  return dynamics
-}
-
-function getSheets(dynamics, name: string) {
-  const sheet = StyleSheet.create(applyNiceStyles(dynamics, `${name}`))
-  return Object.keys(dynamics).map(key => ({
-    ...sheet[key],
-    isDynamic: true,
-    key,
-  }))
-}
-
 function getStyles({ name, style }, theme: ?Object) {
   const styles = { ...style, ...flattenThemes(theme) }
   const dynamicStyles = pickBy(styles, isFunc)
   const staticStyles = pickBy(styles, x => !isFunc(x))
   const niceStatics = applyNiceStyles(staticStyles, `${name}:`)
   const statics = StyleSheet.create(niceStatics)
+  // attach key to status objects so we can use later in fancyElement
+  for (const key of Object.keys(statics)) {
+    statics[key].key = key
+  }
   return {
     statics,
     dynamics: dynamicStyles,
@@ -58,7 +34,7 @@ export default function glossFactory(opts: Object = {}): Function {
   }
 
   const fancyEl = (styles, theme) =>
-    fancyElFactory(theme, baseStyles, styles, opts, getDynamics, getSheets)
+    fancyElFactory(theme, baseStyles, styles, opts)
 
   return function gloss(ChildOrName: Function | string, style: ?Object) {
     // shorthand
