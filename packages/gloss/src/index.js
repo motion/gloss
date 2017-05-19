@@ -24,7 +24,11 @@ function getStyles({ name, style }, theme: ?Object) {
   }
 }
 
-export default function glossFactory(opts: Object = {}): Function {
+const DEFAULT_OPTS = {
+  themeKey: 'theme',
+}
+
+export default function glossFactory(opts: Object = DEFAULT_OPTS): Function {
   let baseStyles
   if (opts.baseStyles) {
     baseStyles = getStyles(

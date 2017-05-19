@@ -148,11 +148,28 @@ export default function fancyElementFactory(theme, parentStyles, styles, opts) {
 
           // dynamic theme + has a prop value
           if (isDynamic && typeof this.props[prop] !== 'undefined') {
+            let activeTheme
+
+            if (opts.themeKey) {
+              const theme = this.props[opts.themeKey]
+              if (theme) {
+                if (typeof theme === 'object') {
+                  activeTheme = theme
+                } else if (typeof theme === 'string') {
+                  activeTheme = this.context.uiTheme[theme]
+                } else if (typeof theme === 'boolean') {
+                  activeTheme = this.context.uiTheme[this.context.uiActiveTheme]
+                } else {
+                  throw `theme prop must be of type object, boolean, or string`
+                }
+              }
+            }
+
             // dynamic themes
             const dynStyles = styles.theme[prop](
               this.props,
-              this.state,
-              this.context
+              this.context,
+              activeTheme
             )
             const dynKeys = Object.keys(dynStyles).filter(
               tag => allKeys.indexOf(tag) > -1
