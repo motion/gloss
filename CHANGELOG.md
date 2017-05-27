@@ -1,8 +1,12 @@
 # Changelog
 
-## 6.1.0
+## 6.2.0
 
 - `<Theme />` and `<ThemeProvide />` join with themes to allow passing themes through context and setting them for sub-trees.
+
+## 6.1.0
+
+- Themes with context (undocumented)
 
 ## 6.0.0
 
