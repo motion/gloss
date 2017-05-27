@@ -4,8 +4,12 @@ import { StyleSheet } from './stylesheet'
 import { pickBy } from 'lodash'
 import { applyNiceStyles, flattenThemes, isFunc } from './helpers'
 
+// exports
 export { colorToString, objectToColor, expandCSSArray } from 'motion-css'
 export type { Transform, Color } from 'motion-css'
+// export components
+export ThemeProvide from './components/themeProvide'
+export Theme from './components/theme'
 
 function getStyles({ name, style }, theme: ?Object) {
   const styles = { ...style, ...flattenThemes(theme) }

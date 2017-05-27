@@ -1,5 +1,4 @@
-/* @flow */
-
+// @flow
 import type { Color, CSSArray, ToCSSAble } from './types'
 
 export function objectToColor(color: Color): string {
@@ -45,7 +44,7 @@ export function expandCSSArray(given: number | Array<number>): CSSArray {
   throw new Error('Invalid type given')
 }
 
-export function isCSSAble(val: any) {
+export function isCSSAble(val: any): boolean {
   return (
     val !== null &&
     typeof val === 'object' &&
@@ -74,7 +73,7 @@ export function getCSSVal(val: ToCSSAble) {
   return res
 }
 
-export function colorToString(color: Color) {
+export function colorToString(color: Color): string {
   if (typeof color === 'string') {
     return color
   }

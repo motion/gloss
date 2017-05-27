@@ -157,7 +157,8 @@ export default function fancyElementFactory(theme, parentStyles, styles, opts) {
                   activeTheme = theme
                 } else if (typeof theme === 'string') {
                   activeTheme = this.context.uiTheme[theme]
-                } else if (typeof theme === 'boolean') {
+                } else if (this.context.uiActiveTheme) {
+                  // context themes
                   activeTheme = this.context.uiTheme[this.context.uiActiveTheme]
                 } else {
                   throw `theme prop must be of type object, boolean, or string`

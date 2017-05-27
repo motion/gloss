@@ -11,7 +11,7 @@ const TRANSFORM_KEYS_MAP = {
   x: 'translateX',
   y: 'translateY',
   z: 'translateZ',
-  dropShadow: 'drop-shadow'
+  dropShadow: 'drop-shadow',
 }
 
 const SHORTHANDS = {
@@ -31,17 +31,19 @@ function processArray(key: string, array: Array<number | string>): string {
     array.push('solid')
   }
 
-  return array.map(style => {
-    // recurse
-    if (Array.isArray(style)) {
-      return objectToColor(style)
-    }
-    // toCSS support
-    if (typeof style === 'object' && isCSSAble(style)) {
-      return getCSSVal(style)
-    }
-    return typeof style === 'number' ? `${style}px` : style
-  }).join(' ')
+  return array
+    .map(style => {
+      // recurse
+      if (Array.isArray(style)) {
+        return objectToColor(style)
+      }
+      // toCSS support
+      if (typeof style === 'object' && isCSSAble(style)) {
+        return getCSSVal(style)
+      }
+      return typeof style === 'number' ? `${style}px` : style
+    })
+    .join(' ')
 }
 
 function objectValue(key, value) {
@@ -49,11 +51,7 @@ function objectValue(key, value) {
     return value
   }
 
-  if (
-    key === 'scale' ||
-    key === 'grayscale' ||
-    key === 'brightness'
-  ) {
+  if (key === 'scale' || key === 'grayscale' || key === 'brightness') {
     return value
   }
 
@@ -81,7 +79,11 @@ function processObject(transform: Transform): string {
   return toReturn.join(' ')
 }
 
-export default function processStyles(styles: Object, includeEmpty: boolean = false, errorMessage: string = ''): Object {
+export default function processStyles(
+  styles: Object,
+  includeEmpty: boolean = false,
+  errorMessage: string = ''
+): Object {
   const toReturn = {}
   for (let key in styles) {
     if (!styles.hasOwnProperty(key)) {
@@ -137,7 +139,9 @@ export default function processStyles(styles: Object, includeEmpty: boolean = fa
       continue
     }
 
-    throw new Error(`${errorMessage}: Invalid style value for ${key}: ${JSON.stringify(value)}`)
+    throw new Error(
+      `${errorMessage}: Invalid style value for ${key}: ${JSON.stringify(value)}`
+    )
   }
   return toReturn
 }
