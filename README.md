@@ -226,7 +226,39 @@ class extends React.Component {
 
 
 ### more advanced
-how to make low level components
+theme sub-trees using context:
+
+```js
+import style from './mygloss'
+import { ThemeProvide, Theme } from 'gloss'
+
+const Root = () =>
+  <ThemeProvide dark={{ background: 'black' }}>
+    <Parent>
+      <Child big />
+    </Parent>
+  </ThemeProvide>
+
+const Parent = (props) =>
+  <Theme name="dark">
+    {props.children}
+  </Theme>
+
+@style
+class Child {
+  render() {
+    return <child />
+  }
+
+  static theme = {
+    big: (props, context, activeTheme) => ({
+      background: activeTheme.background,
+    })
+  }
+}
+```
+
+make ui components that take props as styles
 
 ```js
 import gloss from 'gloss'

@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.1.0
+
+- `<Theme />` and `<ThemeProvide />` join with themes to allow passing themes through context and setting them for sub-trees.
+
 ## 6.0.0
 
 - there was a large backslide bug in 5 when we moved to JSS where passing down styles to a sub-component wouldn't guarantee they would be applied in the right order. This has been fixed by not passing className but instead passing a plain style object that's been processed through gloss. The API is entirely unchanged, but now they should apply properly. Downside may include slight performance hit as it requires passing around and applying styles inline. Upside is that it works properly!
