@@ -1,21 +1,51 @@
-import helper from 'babel-helper-builder-react-jsx'
-
 // @flow
+
+import helper from 'babel-helper-builder-react-jsx'
 
 export default function({ types: t }: { types: Object }) {
   // convert React.createElement() => this.glossElement()
-  const classBodyVisitor = helper({
-    post(state) {
-      // need path to determine if variable or tag
-      const stupidIsTag =
-        state.tagName && state.tagName[0].toLowerCase() === state.tagName[0]
 
-      state.call = t.callExpression(t.identifier('this.glossElement'), [
-        stupidIsTag ? t.stringLiteral(state.tagName) : state.tagExpr,
-        ...state.args,
-      ])
+  const classBodyVisitor = {
+    ClassMethod(path: Object, state: Object) {
+      const GLOSS_ID = path.scope.generateUidIdentifier('gloss')
+      let hasJSX = false
+
+      const { JSXNamespacedName, JSXElement } = helper({
+        post(state) {
+          // need path to determine if variable or tag
+          const stupidIsTag =
+            state.tagName && state.tagName[0].toLowerCase() === state.tagName[0]
+
+          state.call = t.callExpression(GLOSS_ID, [
+            stupidIsTag ? t.stringLiteral(state.tagName) : state.tagExpr,
+            ...state.args,
+          ])
+        },
+      })
+
+      path.traverse(
+        {
+          JSXNamespacedName,
+          JSXElement: {
+            enter() {
+              hasJSX = true
+            },
+            exit: JSXElement.exit,
+          },
+        },
+        state
+      )
+
+      if (hasJSX) {
+        // add a fancyelement hook to start of render
+        path.node.body.body.unshift(
+          t.variableDeclaration('const', [
+            t.variableDeclarator(GLOSS_ID, t.identifier('this.glossElement')),
+          ])
+        )
+      }
     },
-  })
+  }
 
   return {
     visitor: {
