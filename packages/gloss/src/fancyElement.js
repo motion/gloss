@@ -136,6 +136,15 @@ export default function fancyElementFactory(theme, parentStyles, styles, opts) {
       themeKeys = themes && Object.keys(themes)
 
       if (themes && themeKeys.length) {
+        let activeContextualTheme = null
+
+        // context themes
+        if (this.context.uiActiveTheme) {
+          activeContextualTheme = this.context.uiTheme[
+            this.context.uiActiveTheme
+          ]
+        }
+
         for (const prop of themeKeys) {
           const isDynamic = typeof styles.theme[prop] === 'function'
 
@@ -147,22 +156,24 @@ export default function fancyElementFactory(theme, parentStyles, styles, opts) {
           }
 
           // dynamic theme + has a prop value
-          if (isDynamic && typeof this.props[prop] !== 'undefined') {
+          const hasProp = typeof this.props[prop] !== 'undefined'
+
+          if (isDynamic && (hasProp || activeContextualTheme)) {
             let activeTheme
 
+            // theme="x" themes
             if (opts.themeKey) {
-              const theme = this.props[opts.themeKey]
-              if (theme) {
-                if (typeof theme === 'object') {
-                  activeTheme = theme
-                } else if (typeof theme === 'string') {
+              // if directly set on prop
+              if (hasProp) {
+                const propTheme = this.props[opts.themeKey]
+                if (typeof propTheme === 'object') {
+                  activeTheme = propTheme
+                } else if (typeof propTheme === 'string') {
                   activeTheme = this.context.uiTheme[theme]
-                } else if (this.context.uiActiveTheme) {
-                  // context themes
-                  activeTheme = this.context.uiTheme[this.context.uiActiveTheme]
-                } else {
-                  throw `theme prop must be of type object, boolean, or string`
                 }
+              } else if (activeContextualTheme) {
+                // else, set through context
+                activeTheme = activeContextualTheme
               }
             }
 

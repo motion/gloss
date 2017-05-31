@@ -13,6 +13,6 @@ export default class Theme extends React.Component {
   }
 
   render() {
-    return React.children.only(this.props.children)
+    return React.Children.only(this.props.children)
   }
 }
