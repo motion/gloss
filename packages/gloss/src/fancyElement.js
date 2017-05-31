@@ -53,6 +53,7 @@ export default function fancyElementFactory(theme, parentStyles, styles, opts) {
   const processTheme = shouldTheme && theme
 
   return function fancyElement(type, props, ...children) {
+    console.log(type, props, ...children)
     // <... $one $two /> keys
     const propKeys = props ? Object.keys(props) : []
     const styleKeys = filterStyleKeys(propKeys)
@@ -66,6 +67,10 @@ export default function fancyElementFactory(theme, parentStyles, styles, opts) {
     // don't style <Components />!
     const isTag = typeof type === 'string'
     const allKeys = isTag ? [type, ...activeKeys] : activeKeys
+
+    if (type === 'actions') {
+      debugger
+    }
 
     // collect styles, in order
     // { propKey: [styles] }

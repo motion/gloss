@@ -1,25 +1,21 @@
-/* @flow */
+import helper from 'babel-helper-builder-react-jsx'
+
+// @flow
 
 export default function({ types: t }: { types: Object }) {
-  const classBodyVisitor = {
-    ClassMethod(path: Object) {
-      if (path.node.key.name === 'render') {
-        // add a fancyelement hook to start of render
-        path.node.body.body.unshift(
-          t.expressionStatement(
-            t.assignmentExpression(
-              '=',
-              t.memberExpression(
-                t.identifier('React'),
-                t.identifier('createElement')
-              ),
-              t.identifier('this.fancyElement.bind(this)')
-            )
-          )
-        )
-      }
+  // convert React.createElement() => this.glossElement()
+  const classBodyVisitor = helper({
+    post(state) {
+      // need path to determine if variable or tag
+      const stupidIsTag =
+        state.tagName && state.tagName[0].toLowerCase() === state.tagName[0]
+
+      state.call = t.callExpression(t.identifier('this.glossElement'), [
+        stupidIsTag ? t.stringLiteral(state.tagName) : state.tagExpr,
+        ...state.args,
+      ])
     },
-  }
+  })
 
   return {
     visitor: {

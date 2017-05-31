@@ -56,10 +56,10 @@ export default function glossFactory(opts: Object = DEFAULT_OPTS): Function {
     const Child = ChildOrName
 
     // shim this.fancyElement
-    Child.prototype.fancyElement = fancyEl(
+    Child.prototype.glossElement = fancyEl(
       getStyles(Child, opts.dontTheme ? null : Child.theme),
       Child.theme
-    )
+    ).bind(Child)
 
     return Child
   }
