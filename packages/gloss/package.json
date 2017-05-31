@@ -13,6 +13,7 @@
   "dependencies": {
     "aphrodite-jss": "^1.0.0",
     "babel-helper-builder-react-jsx": "^6.24.1",
+    "babel-plugin-syntax-jsx": "^6.18.0",
     "deep-extend": "^0.5.0",
     "jss": "^6.0.1",
     "jss-preset-default": "^1.1.0",

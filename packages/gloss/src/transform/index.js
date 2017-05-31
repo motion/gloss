@@ -5,6 +5,30 @@ import helper from 'babel-helper-builder-react-jsx'
 export default function({ types: t }: { types: Object }) {
   // convert React.createElement() => this.glossElement()
 
+  // todo this is horrible and lame
+  const isIf = attribute =>
+    attribute.type === 'JSXAttribute' && attribute.name.name === 'if'
+  const isntIf = x => !isIf(x)
+  const jsxIfPlugin = path => {
+    const { node } = path
+    const attributes = node.openingElement.attributes
+    if (!attributes) return
+    const ifAttribute = attributes.filter(isIf)[0]
+    if (ifAttribute) {
+      const opening = t.JSXOpeningElement(
+        node.openingElement.name,
+        attributes.filter(isntIf)
+      )
+      const tag = t.JSXElement(opening, node.closingElement, node.children)
+      const conditional = t.conditionalExpression(
+        ifAttribute.value.expression,
+        tag,
+        t.nullLiteral()
+      )
+      path.replaceWith(conditional)
+    }
+  }
+
   const classBodyVisitor = {
     ClassMethod(path: Object, state: Object) {
       const GLOSS_ID = path.scope.generateUidIdentifier('gloss')
@@ -27,7 +51,10 @@ export default function({ types: t }: { types: Object }) {
         {
           JSXNamespacedName,
           JSXElement: {
-            enter() {
+            enter(...args) {
+              if (state.opts.jsxIf) {
+                jsxIfPlugin(...args)
+              }
               hasJSX = true
             },
             exit: JSXElement.exit,
