@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.3.0
+
+- Big bugfix: gloss now properly will style children that are wrapped in functions. This changes how the babel transform works, which will unfortunately break any other JSX plugins you have. Working on a fix for this, if you need a special JSX plugin, please stay on 6.2.0.
+
 ## 6.2.0
 
 - `<Theme />` and `<ThemeProvide />` join with themes to allow passing themes through context and setting them for sub-trees.
