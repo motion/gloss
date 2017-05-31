@@ -67,7 +67,10 @@ export default function({ types: t }: { types: Object }) {
         // add a fancyelement hook to start of render
         path.node.body.body.unshift(
           t.variableDeclaration('const', [
-            t.variableDeclarator(GLOSS_ID, t.identifier('this.glossElement')),
+            t.variableDeclarator(
+              GLOSS_ID,
+              t.identifier('this.glossElement.bind(this)')
+            ),
           ])
         )
       }
