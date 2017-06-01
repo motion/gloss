@@ -136,65 +136,61 @@ export default function fancyElementFactory(theme, parentStyles, styles, opts) {
       themeKeys = themes && Object.keys(themes)
 
       if (themes && themeKeys.length) {
-        let activeContextualTheme = null
+        // set active theme
+        let activeThemeKey
+        let activeTheme
 
-        // context themes
+        // from context
         if (this.context.uiActiveTheme) {
-          activeContextualTheme = this.context.uiTheme[
-            this.context.uiActiveTheme
-          ]
+          activeThemeKey = this.context.uiActiveTheme
+          themeKeys.push(opts.themeKey)
+        }
+        // from props
+        if (opts.themeKey && this.props[opts.themeKey]) {
+          activeThemeKey = this.props[opts.themeKey]
+        }
+        // get it
+        if (activeThemeKey) {
+          activeTheme = this.context.uiTheme[activeThemeKey]
         }
 
+        // loop over themes and apply
         for (const prop of themeKeys) {
           const isDynamic = typeof styles.theme[prop] === 'function'
 
           // static theme
-          if (!isDynamic && this.props[prop] === true) {
-            for (const key of allKeys) {
-              finalStyles[key].push(styles.statics[`${prop}-${key}`])
-            }
-          }
-
-          // dynamic theme + has a prop value
-          const hasProp = typeof this.props[prop] !== 'undefined'
-
-          if (isDynamic && (hasProp || activeContextualTheme)) {
-            let activeTheme
-
-            // theme="x" themes
-            if (opts.themeKey) {
-              // if directly set on prop
-              if (hasProp) {
-                const propTheme = this.props[opts.themeKey]
-                if (typeof propTheme === 'object') {
-                  activeTheme = propTheme
-                } else if (typeof propTheme === 'string') {
-                  activeTheme = this.context.uiTheme[theme]
-                }
-              } else if (activeContextualTheme) {
-                // else, set through context
-                activeTheme = activeContextualTheme
+          if (!isDynamic) {
+            if (this.props[prop] === true) {
+              for (const key of allKeys) {
+                finalStyles[key].push(styles.statics[`${prop}-${key}`])
               }
             }
+          } else {
+            // dynamic theme
+            const hasProp =
+              typeof this.props[prop] !== 'undefined' ||
+              (opts.themeKey === prop && activeTheme)
 
-            // dynamic themes
-            const dynStyles = styles.theme[prop](
-              this.props,
-              this.context,
-              activeTheme
-            )
-            const dynKeys = Object.keys(dynStyles).filter(
-              tag => allKeys.indexOf(tag) > -1
-            )
-
-            if (dynKeys.length) {
-              const activeDynamics = dynKeys.reduce(
-                (acc, cur) => ({ ...acc, [cur]: dynStyles[cur] }),
-                {}
+            if (hasProp) {
+              // dynamic themes
+              const dynStyles = styles.theme[prop](
+                this.props,
+                this.context,
+                activeTheme
               )
-              const dynamics = getSheet(activeDynamics)
-              for (const sheet of dynamics) {
-                finalStyles[sheet.key].push(sheet)
+              const dynKeys = Object.keys(dynStyles).filter(
+                tag => allKeys.indexOf(tag) > -1
+              )
+
+              if (dynKeys.length) {
+                const activeDynamics = dynKeys.reduce(
+                  (acc, cur) => ({ ...acc, [cur]: dynStyles[cur] }),
+                  {}
+                )
+                const dynamics = getSheet(activeDynamics)
+                for (const sheet of dynamics) {
+                  finalStyles[sheet.key].push(sheet)
+                }
               }
             }
           }
