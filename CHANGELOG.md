@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.4.0
+
+- Add Gloss.createElement so you can access parent styles anywhere.
+
 ## 6.3.0
 
 - Big bugfix: gloss now properly will style children that are wrapped in functions. This changes how the babel transform works, which will unfortunately break any other JSX plugins you have. Working on a fix for this, if you need a special JSX plugin, please stay on 6.2.0.

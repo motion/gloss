@@ -1,5 +1,6 @@
 # gloss 💅
-HOC for making style a first class citizen of components. Inline styles for all.
+
+Really powerful CSS in JS. Statically analyzable styles that just work. Extremely flexible theming!
 
 Combines a few things:
 
