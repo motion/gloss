@@ -44,7 +44,7 @@ export default function glossFactory(opts: Object = DEFAULT_OPTS): Function {
   const fancyEl = (styles, theme) =>
     fancyElFactory(theme, baseStyles, styles, opts)
 
-  return function gloss(ChildOrName: Function | string, style: ?Object) {
+  function gloss(ChildOrName: Function | string, style: ?Object) {
     // shorthand
     if (typeof ChildOrName === 'string') {
       const name = ChildOrName
@@ -63,4 +63,9 @@ export default function glossFactory(opts: Object = DEFAULT_OPTS): Function {
 
     return Child
   }
+
+  // allow access directly to Gloss.createElement
+  gloss.createElement = fancyEl(getStyles({ name: 'root', style: {} }))
+
+  return gloss
 }

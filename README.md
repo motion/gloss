@@ -8,7 +8,7 @@ Combines a few things:
 - Advanced theme engine
 - Babel plugin to allow simpler $style props
 
-### features
+## features
 - small library, relies on other small libraries
 - auto prefixes
 - supports pseudos
@@ -18,7 +18,7 @@ Combines a few things:
 - dynamic and static styles
 - keeps html easy to read
 
-### install
+## install
 
 ```js
 npm install --save gloss
@@ -36,7 +36,7 @@ To use the gloss decorator, add this to your babel config:
 }
 ```
 
-### usage
+## usage
 Gloss must first be instantiated, and supports two options:
 
 ```js
@@ -66,7 +66,7 @@ For more information on how to write styles, see:
 - shorthands: [motion-css](https://github.com/motion/gloss/tree/master/packages/nice-styles)
 - syntax: [JSS](https://github.com/cssinjs/jss)
 
-### examples
+## examples
 
 ```js
 import $ from './gloss'
@@ -111,7 +111,7 @@ import style from './gloss'
 }
 ```
 
-### themes
+## themes
 
 Use themes for really easy variant looks for components. Gives you complete control to
 change multiple elements with a single prop.
@@ -167,12 +167,12 @@ import style from './gloss'
 React.render(<Title big tint="yellow" />, document.getElementById('app'))
 ```
 
-### Differences between style and theme:
+### differences between style and theme:
 
 - Theme requires a further nesting of objects, to specify which tag to target for each style
 - Theme passes in all props if you specify a function! This gives more power to use any prop to affect the styling within a given specific theme property.
 
-### base styles
+## base styles
 
 Helpful for maintaining a common set of styles for every component. Using `$$` to access keeps things explicit.
 
@@ -206,9 +206,9 @@ class extends React.Component {
 }
 ```
 
-### glossy style props
+## glossy style props
 
-Gloss now supports optionally handling your style props:
+Gloss now supports optionally handling your style props. This is born out of how it passes styles down to children components, but allows your to handle this yourself. In the future, there may be a way to enable this automatically, or to define a specific alternate prop (like `css`) that automatically glossifies styles.
 
 ```js
 @style
@@ -224,9 +224,28 @@ class extends React.Component {
 }
 ```
 
+## more examples
 
-### more advanced
-theme sub-trees using context:
+### shim React.createElement for styles for any element
+
+ Basically allows your to access `$$prop` type styles anywhere:
+
+```js
+// before you render anything in react:
+import Gloss from './mygloss'
+import React from 'react'
+import ReactDOM from 'react-dom'
+
+React.createElement = Gloss.createElement
+
+// now you can access parent styles here:
+ReactDOM.render(
+  <sometag $$flashy />,
+  document.querySelector('#app')
+)
+```
+
+### advanced themes for sub-trees
 
 ```js
 import style from './mygloss'
@@ -258,7 +277,7 @@ class Child {
 }
 ```
 
-make ui components that take props as styles
+### make ui components that take props as styles
 
 ```js
 import gloss from 'gloss'
@@ -313,6 +332,6 @@ export default class Section {
 }
 ```
 
-### contributing
+## contributing
 
 After cloning this repo, run `npm run bootstrap`. You can then link it into your app `npm link gloss` and test changes.
