@@ -18,7 +18,9 @@
     "jss": "^6.0.1",
     "jss-preset-default": "^1.1.0",
     "lodash": "^4.17.4",
-    "motion-css": "^6.2.0"
+    "motion-css": "^6.2.0",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4"
   },
   "devDependencies": {
     "enzyme": "^2.4.1",

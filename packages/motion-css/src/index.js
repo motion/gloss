@@ -99,9 +99,9 @@ export default function processStyles(
 
       // expand into multiple
       if (Array.isArray(key)) {
-        key.forEach(k => {
-          toReturn[k] = processStyles(styles[k])
-        })
+        for (const k of key) {
+          toReturn[k] = value
+        }
         continue
       }
     }

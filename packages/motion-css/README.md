@@ -4,12 +4,12 @@ Turns objects into nice CSS styles. Has a few helpers:
 
 - Arrays to strings:
   ```
-    border: [1, 'solid', '#eee']
-    border: [1, #eee'] // auto adds solid
-    color: [0, 0, 0, 0.5]
+border: [1, 'solid', '#eee'] // 1px solid #eee
+border: [1, #eee'] // defaults (solid)
+color: [0, 0, 0, 0.5] // rgba(0,0,0,0.5)
   ```
 - Transform objects:
-  `transform: { x: 0, y: 10 }`
+  `transform: { x: 0, y: 10, z: 0, rotate: '100deg' }`
 - Color objects:
   `background: [0, 255, 0]`
 - Converts css-able functions/objects:
@@ -19,10 +19,8 @@ Turns objects into nice CSS styles. Has a few helpers:
   `'& child': { ... }`
 - Shorthands
   ```
-  {
-    borderLeftRadius: ['borderTopLeftRadius', 'borderBottomLeftRadius'],
-    borderRightRadius: ['borderTopRightRadius', 'borderBottomRightRadius'],
-    borderBottomRadius: ['borderBottomLeftRadius', 'borderBottomRightRadius'],
-    borderTopRadius: ['borderTopRightRadius', 'borderTopLeftRadius'],
-  }
+borderLeftRadius: ['borderTopLeftRadius', 'borderBottomLeftRadius'],
+borderRightRadius: ['borderTopRightRadius', 'borderBottomRightRadius'],
+borderBottomRadius: ['borderBottomLeftRadius', 'borderBottomRightRadius'],
+borderTopRadius: ['borderTopRightRadius', 'borderTopLeftRadius'],
   ```
