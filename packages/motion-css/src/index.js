@@ -6,7 +6,7 @@ import type { Transform } from './types'
 export type { Transform, Color } from './types'
 export * from './helpers'
 
-const COLOR_KEYS = new Set(['background'])
+const COLOR_KEYS = new Set(['background', 'color', 'backgroundColor'])
 const TRANSFORM_KEYS_MAP = {
   x: 'translateX',
   y: 'translateY',
@@ -79,9 +79,14 @@ function processObject(transform: Transform): string {
   return toReturn.join(' ')
 }
 
+const NULL_VALUES = {}
+
+const FALSE_VALUES = {
+  background: 'transparent',
+}
+
 export default function processStyles(
   styles: Object,
-  includeEmpty: boolean = false,
   errorMessage: string = ''
 ): Object {
   const toReturn = {}
@@ -90,34 +95,51 @@ export default function processStyles(
       continue
     }
 
-    const value = styles[key]
-    const valueType = typeof value
+    let value = styles[key]
+    let valueType = typeof value
+
+    // get real values
+    // if (valueType === 'function') {
+    //   value = value()
+    //   valueType = typeof value
+    // }
+    if (valueType === false) {
+      value === FALSE_VALUES[key]
+      valueType = typeof value
+    }
+
+    // simple syles
+    if (valueType === 'undefined' || value === null || value === false) {
+      continue
+    }
+
+    let respond
+
+    if (valueType === 'string' || valueType === 'number') {
+      toReturn[key] = value
+      respond = true
+    }
+    // complex styles
+    if (isCSSAble(value)) {
+      toReturn[key] = getCSSVal(value)
+      respond = true
+    }
+    if (COLOR_KEYS.has(key) || key.toLowerCase().indexOf('color') !== -1) {
+      toReturn[key] = objectToColor(value)
+      respond = true
+    }
 
     // shorthands
     if (SHORTHANDS[key]) {
       key = SHORTHANDS[key]
-
-      // expand into multiple
       if (Array.isArray(key)) {
         for (const k of key) {
           toReturn[k] = value
         }
-        continue
       }
     }
-    if ((valueType === 'undefined' || value === null) && !includeEmpty) {
-      continue
-    }
-    if (valueType === 'string' || valueType === 'number') {
-      toReturn[key] = value
-      continue
-    }
-    if (isCSSAble(value)) {
-      toReturn[key] = getCSSVal(value)
-      continue
-    }
-    if (COLOR_KEYS.has(key) || key.toLowerCase().indexOf('color') !== -1) {
-      toReturn[key] = objectToColor(value)
+
+    if (respond) {
       continue
     }
 
@@ -143,5 +165,6 @@ export default function processStyles(
       `${errorMessage}: Invalid style value for ${key}: ${JSON.stringify(value)}`
     )
   }
+
   return toReturn
 }
