@@ -132,10 +132,10 @@ export default function fancyElementFactory(theme, parentStyles, styles, opts) {
 
     if (processTheme) {
       // direct
-      const themes = this.constructor.theme
-      themeKeys = themes && Object.keys(themes)
+      const { theme } = this.constructor
+      themeKeys = theme && Object.keys(theme)
 
-      if (themes && themeKeys.length) {
+      if (theme && themeKeys.length) {
         // set active theme
         let activeThemeKey
         let activeTheme
