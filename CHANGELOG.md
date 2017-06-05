@@ -1,5 +1,10 @@
 # Changelog
 
+## 6.5.0
+
+- Change behavior: themeKey is applied first, allowing overriding themes within components
+
+
 ## 6.4.0
 
 - Add Gloss.createElement so you can access parent styles anywhere.

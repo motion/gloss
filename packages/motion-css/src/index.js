@@ -21,6 +21,14 @@ const SHORTHANDS = {
   borderTopRadius: ['borderTopRightRadius', 'borderTopLeftRadius'],
 }
 
+const NULL_VALUES = {}
+
+const FALSE_VALUES = {
+  background: 'transparent',
+  backgroundColor: 'transparent',
+  borderColor: 'transparent',
+}
+
 function isFloat(n) {
   return n === +n && n !== (n | 0)
 }
@@ -77,12 +85,6 @@ function processObject(transform: Transform): string {
     toReturn.push(`${TRANSFORM_KEYS_MAP[key] || key}(${value})`)
   }
   return toReturn.join(' ')
-}
-
-const NULL_VALUES = {}
-
-const FALSE_VALUES = {
-  background: 'transparent',
 }
 
 export default function processStyles(

@@ -143,7 +143,9 @@ export default function fancyElementFactory(theme, parentStyles, styles, opts) {
         // from context
         if (this.context.uiActiveTheme) {
           activeThemeKey = this.context.uiActiveTheme
-          themeKeys.push(opts.themeKey)
+          // theme comes first, so it can be overriden
+          themeKeys = [opts.themeKey, ...themeKeys]
+          console.log('we here', themeKeys)
         }
         // from props
         if (opts.themeKey && this.props[opts.themeKey]) {
