@@ -5,7 +5,7 @@ Really powerful CSS in JS. Statically analyzable styles that just work. Extremel
 Combines a few things:
 
 - [JSS](https://github.com/cssinjs/jss) styles
-- [motion-css](https://github.com/motion/gloss/tree/master/packages/nice-styles) for powerful JS syntax for styles
+- [motion-css](https://github.com/motion/gloss/tree/master/packages/motion-css) for powerful JS syntax for styles
 - Advanced theme engine
 - Babel plugin to allow simpler $style props
 
