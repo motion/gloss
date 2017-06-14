@@ -29,8 +29,34 @@ const FALSE_VALUES = {
   borderColor: 'transparent',
 }
 
+const COMMA_SEPARATABLE = {
+  boxShadow: true,
+  transition: true,
+}
+
+const px = (x: number | string) => (/px$/.test(`${x}`) ? thing : `${thing}px`)
+
+const OBJECT_TRANSFORM = {
+  boxShadow: ({ x, y, blur, spread, color }) =>
+    `${px(x)} ${px(y)} ${px(blur)} ${px(spread)} ${objectToColor(color)}`,
+  background: ({ color, image, position, repeat = 'no-repeat' }) =>
+    `${objectToColor(color)} ${image} ${position.join(' ')} ${repeat}`,
+}
+
 function isFloat(n) {
   return n === +n && n !== (n | 0)
+}
+
+function processArrayItem(style: any) {
+  // recurse
+  if (Array.isArray(style)) {
+    return objectToColor(style)
+  }
+  // toCSS support
+  if (typeof style === 'object' && isCSSAble(style)) {
+    return getCSSVal(style)
+  }
+  return typeof style === 'number' ? `${style}px` : style
 }
 
 function processArray(key: string, array: Array<number | string>): string {
@@ -38,39 +64,25 @@ function processArray(key: string, array: Array<number | string>): string {
   if (key.indexOf('border') === 0 && array.length === 2) {
     array.push('solid')
   }
-
-  return array
-    .map(style => {
-      // recurse
-      if (Array.isArray(style)) {
-        return objectToColor(style)
-      }
-      // toCSS support
-      if (typeof style === 'object' && isCSSAble(style)) {
-        return getCSSVal(style)
-      }
-      return typeof style === 'number' ? `${style}px` : style
-    })
-    .join(' ')
+  return array.map(processArrayItem).join(COMMA_SEPARATABLE[key] ? ',' : ' ')
 }
 
 function objectValue(key, value) {
+  if (OBJECT_TRANSFORM[key]) {
+    return OBJECT_TRANSFORM[key](value)
+  }
   if (isFloat(value)) {
     return value
   }
-
   if (key === 'scale' || key === 'grayscale' || key === 'brightness') {
     return value
   }
-
   if (typeof value === 'number') {
     return `${value}px`
   }
-
   if (Array.isArray(value)) {
     return processArray(key, value)
   }
-
   return value
 }
 
@@ -164,7 +176,9 @@ export default function processStyles(
     }
 
     throw new Error(
-      `${errorMessage}: Invalid style value for ${key}: ${JSON.stringify(value)}`
+      `${errorMessage}: Invalid style value for ${key}: ${JSON.stringify(
+        value
+      )}`
     )
   }
 

@@ -1,5 +1,8 @@
 # Changelog
 
+## 6.6.0
+- motion-css now handles arrays and objects better
+
 ## 6.5.0
 
 - Change behavior: themeKey is applied first, allowing overriding themes within components
