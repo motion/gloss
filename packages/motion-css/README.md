@@ -69,4 +69,5 @@ Turns objects into nice CSS styles. Has a few helpers:
     position: [0, 0],
     repeat: 'no-repeat'
   }
-}```
+}
+```
