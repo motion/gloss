@@ -6,7 +6,7 @@ Turns objects into nice CSS styles. Has a few helpers:
 ```js
 {
   border: [1, 'solid', '#eee'], // 1px solid #eee
-  border: [1, #eee'], // defaults (solid)
+  border: [1, '#eee'], // defaults (solid)
   color: [0, 0, 0, 0.5], // rgba(0,0,0,0.5)
 }
 ```
