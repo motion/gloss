@@ -1,5 +1,8 @@
 # Changelog
 
+## 6.6.2
+- fixes bug with new version of babel not parsing
+
 ## 6.6.0
 - motion-css now handles arrays and objects better
 
