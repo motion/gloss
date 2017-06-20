@@ -67,10 +67,7 @@ export function getCSSVal(val: ToCSSAble) {
   } else if (typeof val.rgb === 'function') {
     res = val.rgb()
   }
-  if (typeof res !== 'string') {
-    return res.toString()
-  }
-  return res
+  return res.toString()
 }
 
 export function colorToString(color: Color): string {
