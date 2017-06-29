@@ -1,11 +1,11 @@
 powerful, lightweight, elegant css in js
 
 - [JSS](https://github.com/cssinjs/jss) styles
-- [motion-css](https://github.com/motion/gloss/tree/master/packages/motion-css) for powerful JS syntax for styles
 - themes
 - simple $style props through babel transform
 - super fast
 - built on jss
+  - nice object to styles syntax
   - auto prefixes
   - animations
   - pseudos
