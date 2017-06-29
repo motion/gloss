@@ -1,5 +1,4 @@
 // @flow
-
 export default function({ types: t }: { types: Object }) {
   return {
     visitor: {

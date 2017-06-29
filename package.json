@@ -1,18 +1,32 @@
 {
-  "private": true,
-  "license": "MIT",
-  "scripts": {
-    "bootstrap": "lerna bootstrap; npm run compile",
-    "clean": "rm -rf packages/*/lib",
-    "compile": "npm run clean; lerna exec -- babel src --out-dir lib --source-maps",
-    "publish": "npm run compile; lerna publish",
-    "test": "lerna exec --concurrency 1 -- apm test",
-    "watch": "npm run clean; lerna exec --concurrency 99 -- babel src --out-dir lib --source-maps --watch"
+  "name": "gloss",
+  "version": "7.0.0",
+  "description": "amazing css in js",
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/motion/gloss.git"
   },
+  "author": "motion",
+  "license": "MIT",
+  "homepage": "https://github.com/motion/gloss",
+  "keywords": [
+    "css-in-js",
+    "css",
+    "js",
+    "react",
+    "style"
+  ],
   "dependencies": {
-    "babel-cli": "^6.5.1",
-    "babel-preset-steelbrain": "^4.0.2",
-    "lerna": "2.0.0-beta.24",
-    "prop-types": "^15.5.10"
+    "@mcro/css": "^1.0.1",
+    "aphrodite-jss": "^1.0.0",
+    "babel-helper-builder-react-jsx": "^6.24.1",
+    "deep-extend": "^0.5.0",
+    "jss": "^6.0.1",
+    "jss-preset-default": "^1.1.0"
+  },
+  "peerDependencies": {
+    "react": "^15.6.0",
+    "react-dom": "^15.6.0"
   }
 }

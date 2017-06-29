@@ -2,12 +2,5 @@
 node_modules
 npm-debug.log
 *.log
-*.cache
-dist
-/packages/*/lib
-build/
-deps/
-out/
-.tmp
-npm-shrinkwrap.json
 .vscode
+lib

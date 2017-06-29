@@ -1,5 +1,16 @@
 # Changelog
 
+## 7.0.0
+- total rewrite, performance many many times faster
+- themes redone, simpler and more powerful
+- many small improvements to apis
+- can access `this.theme` in components
+- `this.gloss` helper in components
+- custom color handlers
+- tagName attribute
+- able to set a custom prop to accept gloss styles
+- remove lodash dep
+
 ## 6.6.2
 - fixes bug with new version of babel not parsing
 

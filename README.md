@@ -10,14 +10,16 @@ Combines a few things:
 - Babel plugin to allow simpler $style props
 
 ## features
-- small library, relies on other small libraries
-- auto prefixes
-- supports pseudos
-- supports media queries
+- super fast
+- built on jss
+  - auto prefixes
+  - animations
+  - pseudos
+  - media queries
+  - '> selectors', etc
+- incredibly flexible (themes, styles, parent-styles)
 - themes are far easier way to restyle multiple elements
 - powerful js object-based styles
-- dynamic and static styles
-- keeps html easy to read
 
 ## install
 
@@ -25,7 +27,7 @@ Combines a few things:
 npm install --save gloss
 ```
 
-To use the gloss decorator, add this to your babel config:
+gloss has a tiny transform that will allow it to lookup on your elements. this keeps it :lightning: fast.
 
 ```js
 {
@@ -38,301 +40,308 @@ To use the gloss decorator, add this to your babel config:
 ```
 
 ## usage
-Gloss must first be instantiated, and supports two options:
+
+here's a pretty good base view you can build from:
 
 ```js
-import gloss from 'gloss'
-
-export const style = gloss({
-  // when on, slightly faster performance but no theme support
-  dontTheme: false,
-  // optional object with base styles that are accessible using $$props
-  baseStyles: {
-    fullscreen: {
-      position: 'absolute',
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0
-    }
-  }
-})
-
-// to use later in app:
-// import { style } from './path/to/glossSetup'
-```
-
-For more information on how to write styles, see:
-
-- shorthands: [motion-css](https://github.com/motion/gloss/tree/master/packages/nice-styles)
-- syntax: [JSS](https://github.com/cssinjs/jss)
-
-## examples
-
-```js
-import $ from './gloss'
-
-export const Title = $('h1', {
-  border: [1, '#eee'],
-  background: 'azure',
-  fontSize: 22
-})
-
-export const Page = $('section', (props) => ({
-  padding: 20,
-  background: props.background,
-}))
-```
-
-A small view using the decorator:
-
-```js
-import style from './gloss'
-
-@style class extends Component {
-  render() {
-    return <h1 $black $bg="#fff">Test</h1>
-  }
-
-  static style = {
-    h1: {
-      fontSize: 22,
-      color: [255, 255, 255],
-      '&:hover': { color: 'red', },
-      borderBottom: [2, 'solid yellow']
-    },
-    black: {
-      color: 'black',
-    },
-    bg: color => ({
-      background: color,
-      borderBottom: [2, 'solid', color]
-    })
-  }
-}
-```
-
-## themes
-
-Use themes for really easy variant looks for components. Gives you complete control to
-change multiple elements with a single prop.
-
-```js
-import style from './gloss'
-
-@style class Title extends React.Component {
-  render() {
-    return (
-      <base>
-        <h1>Test</h1>
-      </base>
-    )
-  }
-
-  static style = {
-    base: {
-      padding: 10,
-      transform: {
-        rotate: '45deg',
-      },
-      filter: {
-        grayscale: 0,
-      }
-    },
-    h1: {
-      fontSize: 22,
-    }
-  }
-
-  static theme = {
-    big: {
-      base: {
-        padding: 20,
-      },
-      h1: {
-        fontSize: 50,
-      }
-    },
-    tint: props => ({
-      base: {
-        background: [props.color, 0.5],
-      },
-      h1: {
-        color: props.color,
-      }
-    })
-  }
-}
-
-// Use
-React.render(<Title big tint="yellow" />, document.getElementById('app'))
-```
-
-### differences between style and theme:
-
-- Theme requires a further nesting of objects, to specify which tag to target for each style
-- Theme passes in all props if you specify a function! This gives more power to use any prop to affect the styling within a given specific theme property.
-
-## base styles
-
-Helpful for maintaining a common set of styles for every component. Using `$$` to access keeps things explicit.
-
-```js
-import gloss from 'gloss'
-
-const style = gloss({
-  baseStyles: {
-    row: {
-      flexFlow: 'row',
-    },
-  },
-})
-
-@style
-class extends React.Component {
-  render() {
-    return (
-      <div $$row>
-        <h1>Test1</h1>
-        <h1>Test2</h1>
-      </div>
-    )
-  }
-
-  static style = {
-    div: {
-      background: 'yellow',
-    },
-  }
-}
-```
-
-## glossy style props
-
-Gloss now supports optionally handling your style props. This is born out of how it passes styles down to children components, but allows your to handle this yourself. In the future, there may be a way to enable this automatically, or to define a specific alternate prop (like `css`) that automatically glossifies styles.
-
-```js
-@style
-class extends React.Component {
-  render() {
-    return (
-      <div style={{ gloss: true, background: 'red', '&:hover': { background: 'yellow' } }}>
-        <h1>Test1</h1>
-        <h1>Test2</h1>
-      </div>
-    )
-  }
-}
-```
-
-## more examples
-
-### shim React.createElement for styles for any element
-
- Basically allows your to access `$$prop` type styles anywhere:
-
-```js
-// before you render anything in react:
-import Gloss from './mygloss'
 import React from 'react'
 import ReactDOM from 'react-dom'
+import gloss, { color as $, Theme, ThemeProvide } from '@mcro/gloss'
+import type { Color } from '@mcro/gloss'
+import Icon from './icon'
+import Popover from './popover'
 
-React.createElement = Gloss.createElement
+const LINE_HEIGHT = 30
 
-// now you can access parent styles here:
-ReactDOM.render(
-  <sometag $$flashy />,
-  document.querySelector('#app')
-)
-```
-
-### advanced themes for sub-trees
-
-```js
-import style from './mygloss'
-import { ThemeProvide, Theme } from 'gloss'
-
-const Root = () =>
-  <ThemeProvide dark={{ background: 'black' }}>
-    <Parent>
-      <Child big />
-    </Parent>
-  </ThemeProvide>
-
-const Parent = (props) =>
-  <Theme name="dark">
-    {props.children}
-  </Theme>
-
-@style
-class Child {
-  render() {
-    return <child />
-  }
-
-  static theme = {
-    big: (props, context, activeTheme) => ({
-      background: activeTheme.background,
-    })
-  }
-}
-```
-
-### make ui components that take props as styles
-
-```js
-import gloss from 'gloss'
-
-// import this usually from ./gloss.js
-const style = gloss({
-  baseStyles: {
-    red: {
-      background: 'red',
-    },
-    style: obj => obj,
-  }
+const { decorator: style } = gloss({
+  baseStyles: styles,
+  themeProp: 'theme',
+  tagName: 'tagName',
+  isColor: color => color && !!color.rgb,
+  processColor: color => color.toString(),
 })
 
+ReactDOM.render(
+  <ThemeProvide bright={{ background: '#000' }}>
+    <Theme name="bright">
+      <Surface icon="name" />
+    </Theme>
+  </ThemeProvide>,
+  document.querySelector('#app')
+)
+
 @style
-export default class Section {
+export default class Surface {
   static defaultProps = {
-    maxHeight: 'auto',
-    minHeight: 800,
-    background: colors.primary,
-    height: 'auto',
-    color: '#444',
-    position: 'relative',
-    overflow: 'hidden',
-    padding: [90, 0],
-    [media.small]: {
-      padding: [50, 0],
-    },
+    tagName: 'div',
+    size: 1,
   }
 
-  render() {
-    const { children, windowHeight, maxHeight, minHeight, attach, ...props } = this.props
+  uniq = `icon-${Math.round(Math.random() * 1000000)}`
 
-    if (windowHeight) {
-      props.height = Math.max(minHeight, Math.min(maxHeight, window.innerHeight))
+  render({
+    inSegment,
+    inForm,
+    onClick,
+    clickable,
+    children,
+    icon,
+    iconProps,
+    iconSize: _iconSize,
+    iconAfter,
+    iconColor,
+    color,
+    active,
+    highlight,
+    spaced,
+    after,
+    chromeless,
+    inline,
+    dim,
+    stretch,
+    tagName,
+    tooltip,
+    tooltipProps,
+    background,
+    className,
+    theme: _theme,
+    circular,
+    size,
+    borderRadius,
+    material,
+    padding,
+    height,
+    margin,
+    hoverColor,
+    wrapElement,
+    elementStyles,
+    getRef,
+    noElement,
+    flex,
+    placeholderColor,
+    borderColor,
+    ...props
+  }) {
+    const { theme } = this
+    const hasIconBefore = icon && !iconAfter
+    const hasIconAfter = icon && iconAfter
+    const stringIcon = typeof icon === 'string'
+    const iconSize =
+      _iconSize ||
+      (theme && theme.element.style.fontSize * 0.9) ||
+      Math.log(size + 1) * 15
+
+    const finalClassName = `${this.uniq} ${className || ''}`
+    const passProps = {
+      className: finalClassName,
+      onClick,
+      tagName,
+      ref: getRef,
+      ...props,
     }
 
     return (
-      <section $$style={props} $$red {...attach}>
-        {children}
-      </section>
+      <surface {...!wrapElement && passProps}>
+        <icon if={icon && !stringIcon} $iconAfter={hasIconAfter}>
+          {icon}
+        </icon>
+        <Icon
+          if={icon && stringIcon}
+          $icon
+          $iconAfter={hasIconAfter}
+          name={icon}
+          size={iconSize}
+          {...iconProps}
+        />
+        <element
+          if={!noElement}
+          {...wrapElement && passProps}
+          $hasIconBefore={hasIconBefore}
+          $hasIconAfter={hasIconAfter}
+        >
+          {children}
+        </element>
+        {after || null}
+        <Popover
+          if={tooltip}
+          theme="dark"
+          background
+          openOnHover
+          noHover
+          animation="bounce 150ms"
+          target={`.${this.uniq}`}
+          padding={[0, 6]}
+          distance={8}
+          arrowSize={8}
+          delay={100}
+          popoverProps={{ $$style: { fontSize: 11 } }}
+          {...tooltipProps}
+        >
+          {tooltip}
+        </Popover>
+      </surface>
     )
   }
 
-  static theme = {
-    centered: {
-      section: {
-        justifyContent: 'center',
-      },
+  static style = {
+    surface: {
+      lineHeight: '1rem',
+      fontWeight: 400,
+      flexFlow: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderWidth: 1,
+      borderStyle: 'solid',
+      borderColor: 'transparent',
+      position: 'relative',
+      boxShadow: ['inset 0 0.5px 0 rgba(255,255,255,0.2)'],
     },
+    minimal: {
+      boxShadow: 'none',
+    },
+    element: {
+      border: 'none',
+      background: 'transparent',
+      userSelect: 'none',
+      height: '100%',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    icon: {
+      pointerEvents: 'none',
+    },
+    hasIconBefore: {
+      marginLeft: '0.7vh',
+    },
+    hasIconAfter: {
+      marginRight: '0.7vh',
+    },
+    iconAfter: {
+      order: 3,
+    },
+  }
+
+  surfaceStyle = {
+    background: 'transparent',
+    borderRightWidth: 1,
+    borderLeftWidth: 1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    margin: [-2, -3],
+    maxHeight: '1.45rem',
+    borderRadius: 1000,
+  }
+
+  disabledStyle = {
+    opacity: 0.25,
+    pointerEvents: 'none',
+  }
+
+  dimStyle = {
+    opacity: 0.5,
+    '&:hover': {
+      opacity: 1,
+    },
+  }
+
+  spacedStyles = {
+    margin: [0, 5],
+    borderRightWidth: 1,
+  }
+
+  static theme = (props, theme, self) => {
+    // sizes
+    const height = props.size * LINE_HEIGHT
+    const width = props.width
+    const padding =
+      typeof props.padding !== 'undefined'
+        ? props.padding
+        : props.wrapElement ? 0 : [0, height / 4]
+    const fontSize = props.fontSize || height * 0.5
+    const flex = props.flex === true ? 1 : props.flex
+
+    // radius
+    const baseBorderRadius = props.borderRadius
+      ? props.borderRadius
+      : height / 5
+    const borderRadius = props.circular
+      ? height
+      : baseBorderRadius || height / 10
+
+    // colors
+    const background =
+      props.background || theme.base.background || 'transparent'
+    const borderColor = props.borderColor || theme.base.borderColor
+    const color = props.highlight
+      ? props.highlightColor || theme.highlight.color || props.color
+      : props.active ? theme.active.color : props.color || theme.base.color
+    const hoverColor =
+      (props.highlight && $(color).lighten(0.2)) ||
+      props.hoverColor ||
+      theme.hover.color ||
+      (props.color && $(props.color).lighten(0.2))
+    const iconColor = props.iconColor || color
+    const iconHoverColor = props.iconHoverColor || hoverColor
+
+    const segmentStyles = props.inSegment && {
+      marginLeft: -1,
+      borderLeftRadius: props.inSegment.first ? borderRadius : 0,
+      borderRightRadius: props.inSegment.last ? borderRadius : 0,
+    }
+    const circularStyles = props.circular && {
+      padding: 0,
+      width: height,
+      borderRadius: props.size * LINE_HEIGHT,
+      overflow: 'hidden',
+    }
+    return {
+      element: {
+        ...props.elementStyles,
+        fontSize,
+        lineHeight: '1px',
+        color,
+        '&:hover': {
+          color: hoverColor,
+        },
+      },
+      surface: {
+        height,
+        width,
+        flex,
+        padding,
+        borderRadius,
+        borderColor,
+        background,
+        ...circularStyles,
+        ...segmentStyles,
+        ...(props.inline && self.surfaceStyle),
+        ...(props.disabled && self.disabledStyle),
+        ...(props.dim && self.dimStyle),
+        ...(props.spaced && self.spacedStyle),
+        ...(props.chromeless && {
+          borderWidth: 0,
+        }),
+        '& > icon': {
+          color: iconColor,
+        },
+        '&:hover > icon': {
+          color: iconHoverColor,
+        },
+        '&:hover': {
+          ...theme.hover,
+        },
+        // this is just onmousedown
+        '&:active': {
+          position: 'relative',
+          zIndex: 1000,
+        },
+        // inForm
+        ...(props.inForm && {
+          '&:active': theme.active,
+          '&:focus': theme.focus,
+        }),
+      },
+    }
   }
 }
 ```
-
-## contributing
-
-After cloning this repo, run `npm run bootstrap`. You can then link it into your app `npm link gloss` and test changes.
