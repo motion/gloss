@@ -1,5 +1,3 @@
-# gloss 💅
-
 powerful, lightweight, elegant css in js
 
 - [JSS](https://github.com/cssinjs/jss) styles
