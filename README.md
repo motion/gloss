@@ -5,7 +5,6 @@ powerful, lightweight, elegant css in js
 - themes
 - simple $style props through babel transform
 - super fast
-- full-featured js object library
 - built on jss
   - auto prefixes
   - animations
