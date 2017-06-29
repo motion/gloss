@@ -36,10 +36,10 @@ babel transform for efficient $shorthand props
 here's a pretty good base view you can build from:
 
 ```js
+// note: uses babel-jsx-if
 import React from 'react'
 import ReactDOM from 'react-dom'
 import gloss, { color as $, Theme, ThemeProvide } from '@mcro/gloss'
-import type { Color } from '@mcro/gloss'
 import Icon from './icon'
 import Popover from './popover'
 
