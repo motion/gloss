@@ -1,25 +1,19 @@
 # gloss 💅
 
-Really powerful CSS in JS. Statically analyzable styles that just work. Extremely flexible theming!
-
-Combines a few things:
+powerful, lightweight, elegant css in js
 
 - [JSS](https://github.com/cssinjs/jss) styles
 - [motion-css](https://github.com/motion/gloss/tree/master/packages/motion-css) for powerful JS syntax for styles
-- Advanced theme engine
-- Babel plugin to allow simpler $style props
-
-## features
+- themes
+- simple $style props through babel transform
 - super fast
+- full-featured js object library
 - built on jss
   - auto prefixes
   - animations
   - pseudos
   - media queries
   - '> selectors', etc
-- incredibly flexible (themes, styles, parent-styles)
-- themes are far easier way to restyle multiple elements
-- powerful js object-based styles
 
 ## install
 
@@ -27,7 +21,7 @@ Combines a few things:
 npm install --save gloss
 ```
 
-gloss has a tiny transform that will allow it to lookup on your elements. this keeps it :lightning: fast.
+babel transform for efficient $shorthand props
 
 ```js
 {
