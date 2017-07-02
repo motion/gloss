@@ -129,7 +129,7 @@ export default class Surface {
       borderStyle: 'solid',
       borderColor: 'transparent',
       position: 'relative',
-      boxShadow: ['inset 0 0.5px 0 rgba(255,255,255,0.2)'],
+      boxShadow: ['inset', 0, 0.5, 0, [255,255,255,0.2]],
     },
     minimal: {
       boxShadow: 'none',
