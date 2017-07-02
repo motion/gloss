@@ -190,35 +190,24 @@ export default class Surface {
     },
   }
 
-  surfaceStyle = {
-    background: 'transparent',
-    borderRightWidth: 1,
-    borderLeftWidth: 1,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    margin: [-2, -3],
-    maxHeight: '1.45rem',
-    borderRadius: 1000,
-  }
-
-  disabledStyle = {
+  static disabledStyle = {
     opacity: 0.25,
     pointerEvents: 'none',
   }
 
-  dimStyle = {
+  static dimStyle = {
     opacity: 0.5,
     '&:hover': {
       opacity: 1,
     },
   }
 
-  spacedStyles = {
+  static spacedStyles = {
     margin: [0, 5],
     borderRightWidth: 1,
   }
 
-  static theme = (props, theme, self) => {
+  static theme = (props, theme) => {
     // sizes
     const height = props.size * LINE_HEIGHT
     const width = props.width
@@ -283,10 +272,10 @@ export default class Surface {
         background,
         ...circularStyles,
         ...segmentStyles,
-        ...(props.inline && self.surfaceStyle),
-        ...(props.disabled && self.disabledStyle),
-        ...(props.dim && self.dimStyle),
-        ...(props.spaced && self.spacedStyle),
+        ...(props.inline && this.constructor.surfaceStyle),
+        ...(props.disabled && this.constructor.disabledStyle),
+        ...(props.dim && this.constructor.dimStyle),
+        ...(props.spaced && this.constructor.spacedStyle),
         ...(props.chromeless && {
           borderWidth: 0,
         }),
