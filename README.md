@@ -133,19 +133,14 @@ export default class Surface {
 
     return (
       <surface {...!wrapElement && passProps}>
-        <icon if={icon && !stringIcon} $iconAfter={hasIconAfter}>
-          {icon}
-        </icon>
-        <Icon
-          if={icon && stringIcon}
+        {icon && <Icon
           $icon
           $iconAfter={hasIconAfter}
           name={icon}
           size={iconSize}
           {...iconProps}
-        />
+        />}
         <element
-          if={!noElement}
           {...wrapElement && passProps}
           $hasIconBefore={hasIconBefore}
           $hasIconAfter={hasIconAfter}
@@ -153,23 +148,6 @@ export default class Surface {
           {children}
         </element>
         {after || null}
-        <Popover
-          if={tooltip}
-          theme="dark"
-          background
-          openOnHover
-          noHover
-          animation="bounce 150ms"
-          target={`.${this.uniq}`}
-          padding={[0, 6]}
-          distance={8}
-          arrowSize={8}
-          delay={100}
-          popoverProps={{ $$style: { fontSize: 11 } }}
-          {...tooltipProps}
-        >
-          {tooltip}
-        </Popover>
       </surface>
     )
   }
