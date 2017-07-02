@@ -68,50 +68,18 @@ export default class Surface {
     size: 1,
   }
 
-  uniq = `icon-${Math.round(Math.random() * 1000000)}`
-
   render({
-    inSegment,
-    inForm,
     onClick,
-    clickable,
     children,
     icon,
     iconProps,
     iconSize: _iconSize,
     iconAfter,
     iconColor,
-    color,
-    active,
-    highlight,
-    spaced,
-    after,
-    chromeless,
-    inline,
-    dim,
-    stretch,
-    tagName,
-    tooltip,
-    tooltipProps,
-    background,
     className,
-    theme: _theme,
-    circular,
-    size,
-    borderRadius,
-    material,
-    padding,
-    height,
-    margin,
-    hoverColor,
-    wrapElement,
-    elementStyles,
+    tagName,
     getRef,
-    noElement,
-    flex,
-    placeholderColor,
-    borderColor,
-    ...props
+    after
   }) {
     const { theme } = this
     const hasIconBefore = icon && !iconAfter
@@ -122,13 +90,11 @@ export default class Surface {
       (theme && theme.element.style.fontSize * 0.9) ||
       Math.log(size + 1) * 15
 
-    const finalClassName = `${this.uniq} ${className || ''}`
     const passProps = {
-      className: finalClassName,
+      className,
       onClick,
       tagName,
       ref: getRef,
-      ...props,
     }
 
     return (
